@@ -1,0 +1,1 @@
+{!! json_encode(['error' => 'Method not Allowed']) !!}
