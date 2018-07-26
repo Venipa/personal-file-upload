@@ -12,7 +12,7 @@
 */
 
 Route::get('/', function () {
-    return response('Sharex Upload Endpoint from Venipa');
+    return response('Sharex Upload Endpoint');
 });
 
 Route::get('/f/{token}/{slug?}', 'UploadController@getfile')->name('api:upload:get');
