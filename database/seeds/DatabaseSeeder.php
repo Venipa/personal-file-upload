@@ -11,11 +11,12 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        \App\User::create([
+        $user = \App\User::create([
             'name' => 'Venipa',
             'password' => \Illuminate\Support\Facades\Hash::make('admin'),
             'email' => 'admin@venipa.net',
             'apikey' => str_random(20)
         ]);
+        print("Your User Key: " . $user->apikey);
     }
 }
