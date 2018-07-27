@@ -12,7 +12,7 @@
 */
 
 Route::get('/', function () {
-    return response('Sharex Upload Endpoint');
+    return view('welcome');
 });
 
 Route::get('/f/{token}/{slug?}', 'UploadController@getfile')->name('api:upload:get');

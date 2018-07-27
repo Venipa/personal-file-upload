@@ -19,7 +19,7 @@ class UploadController extends Controller
         $user = User::where('apikey', $r->input('key'))->first();
         $file = $r->file('file');
         $ufile = Uploads::where('hash', md5_file($file->getRealPath()))->first();
-        if(count($ufile) == 0) {
+        if($ufile == null) {
             $sharetoken = str_random(10);
             $deletiontoken = str_random(20);
             while(Uploads::where('share_token', $sharetoken)->count() > 0) {
@@ -79,7 +79,7 @@ class UploadController extends Controller
             'key' => 'required|exists:uploads,share_token',
         ]);
         if($v->fails()) return $v->errors();
-        $file = Uploads::where('share_token', $token)->first();
+        $file = Uploads::where('share_token', $token)->with('user')->first();
         $file->humsize = $this->bytesToHuman($file->filesize);
         return view('info')->with(['file' => $file]);
     }
