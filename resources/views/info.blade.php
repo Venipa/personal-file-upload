@@ -43,7 +43,7 @@
                                 </tr>
                                 <tr>
                                     <td class="text-right">Open</td>
-                                    <td><a class="btn btn-primary bmd-btn-icon" target="_blank" href="{{route('api:upload:get', [$file->share_token, str_slug($file->filename, "-")])}}">
+                                    <td><a class="btn btn-primary bmd-btn-icon" target="_blank" href="{{route('api:upload:get', [$file->share_token, str_slug($file->filename, "-") . ($file->filetype == "gif" ? ".gif" : "")])}}">
                                             <i class="mdi mdi-open-in-new"></i>
                                         </a></td>
                                 </tr>

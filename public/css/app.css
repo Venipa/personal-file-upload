@@ -30880,6 +30880,24 @@ h6 {
   line-height: inherit;
 }
 
+.ripple p,
+.ripple span,
+.ripple div,
+.ripple button,
+.ripple a,
+.ripple label,
+.ripple h1,
+.ripple h2,
+.ripple h3,
+.ripple h4,
+.ripple h5,
+.ripple h6 {
+  -webkit-user-select: none !important;
+  -moz-user-select: none !important;
+  -ms-user-select: none !important;
+  user-select: none !important;
+}
+
 html,
 body {
   height: 100%;
