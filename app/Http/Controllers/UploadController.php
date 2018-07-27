@@ -37,7 +37,7 @@ class UploadController extends Controller
                     'deletion_token' => $deletiontoken,
                     'filename' => $file->getClientOriginalName(),
                     'filemime' => $file->getClientMimeType(),
-                    'filetype' => $file->getClientOriginalExtension(),
+                    'filetype' => $file->getClientOriginalExtension() ?? (new \Mimey\MimeTypes($file->getClientMimeType()))->getExtension(),
                     'filesize' => $file->getSize(),
                     'user_id' => $user->id,
                     'hash' => md5_file($file->getRealPath())
@@ -45,7 +45,7 @@ class UploadController extends Controller
             }
         }
         return response()->json([
-            'url' => route('api:upload:get', [$ufile->share_token, str_slug($ufile->filename, "-")]) . ($file->filetype == "gif" ? ".gif" : ""),
+            'url' => route('api:upload:get', [$ufile->share_token, str_slug($ufile->filename, "-")]) . ($ufile->filetype == "gif" ? ".gif" : ""),
             'deletion_url' => route('api:upload:delete', $ufile->deletion_token),
             'info_url' => route('api:upload:info', [$ufile->share_token, str_slug($ufile->filename, "-")])
         ]);
