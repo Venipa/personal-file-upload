@@ -37,14 +37,14 @@
                                     @endforeach
                                 <tr>
                                     <td class="text-right">Download</td>
-                                    <td><a class="btn btn-primary bmd-btn-icon" download="{{$file->filename}}" href="{{route('api:upload:get', [$file->share_token, str_slug($file->filename, "-")])}}">
-                                            <i class="mdi mdi-cloud-download"></i>
+                                    <td><a class="btn btn-primary btn-sm" download="{{$file->filename}}" href="{{route('api:upload:get', [$file->share_token, str_slug($file->filename, "-")])}}">
+                                            <i class="mdi mdi-cloud-download"></i> Download File
                                         </a></td>
                                 </tr>
                                 <tr>
                                     <td class="text-right">Open</td>
-                                    <td><a class="btn btn-primary bmd-btn-icon" target="_blank" href="{{route('api:upload:get', [$file->share_token, str_slug($file->filename, "-") . ($file->filetype == "gif" ? ".gif" : "")])}}">
-                                            <i class="mdi mdi-open-in-new"></i>
+                                    <td><a class="btn btn-secondary btn-sm" target="_blank" href="{{route('api:upload:get', [$file->share_token, str_slug($file->filename, "-") . ($file->filetype == "gif" ? ".gif" : "")])}}">
+                                            <i class="mdi mdi-open-in-new"></i> Open in new Window
                                         </a></td>
                                 </tr>
                                 </tbody>

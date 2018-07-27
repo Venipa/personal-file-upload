@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Validator;
 
 class UploadController extends Controller
 {
+
     public function upload(Request $r) {
         $v = Validator::make($r->all(), [
             'key' => 'required|exists:sqlite.users,apikey',
@@ -36,7 +37,7 @@ class UploadController extends Controller
                     'deletion_token' => $deletiontoken,
                     'filename' => $file->getClientOriginalName(),
                     'filemime' => $file->getClientMimeType(),
-                    'filetype' => $file->getType(),
+                    'filetype' => $file->getClientOriginalExtension(),
                     'filesize' => $file->getSize(),
                     'user_id' => $user->id,
                     'hash' => md5_file($file->getRealPath())

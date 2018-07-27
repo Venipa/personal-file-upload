@@ -6,7 +6,11 @@
             </div>
         </div>
         <div class="row justify-content-center">
-            @yield('footer.more')
+            <div class="col text-center small">
+                <div class="text-muted">
+                    <span data-tooltip="{{$git->path_with_namespace}}"><i class="mdi mdi-git"></i> Latest Commit: {{(new \Carbon\Carbon($git->last_activity_at))->diffForHumans()}}</span>
+                </div>
+            </div>
         </div>
     </div>
 </footer>

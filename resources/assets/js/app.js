@@ -1,9 +1,17 @@
 
 window.$ = window.jQuery = require('jquery');
 window.Popper = require('popper.js').default;
+var tippy = require('tippy.js');
+
 require('bootstrap-material-design');
 (function($) {
     $('body').bootstrapMaterialDesign();
+    $('[data-tooltip]').each(function (v) {
+        $(this).attr('title', $(this).attr('data-tooltip'));
+    });
+    tippy('[data-tooltip]', {
+        theme: "light"
+    });
     $(window).on('load', function() {
         setTimeout(function () {
             $('[data-loading]').fadeOut(300, function() {

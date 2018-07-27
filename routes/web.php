@@ -11,9 +11,7 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', 'HomeController@index')->name('index');
 
 Route::get('/f/{token}/{slug?}', 'UploadController@getfile')->name('api:upload:get');
 Route::get('/i/{token}/{slug?}', 'UploadController@getInfo')->name('api:upload:info');
