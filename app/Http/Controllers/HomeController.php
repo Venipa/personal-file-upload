@@ -33,7 +33,7 @@ class HomeController extends Controller
         }
     }
     public function files() {
-        $user = Auth::user()->with('files');
-        return view('files')->with(['$user' => $user]);
+        $user = Auth::user()->with('files')->first();
+        return view('files')->with(['user' => $user]);
     }
 }

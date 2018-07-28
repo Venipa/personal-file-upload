@@ -27,6 +27,6 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
     public function files() {
-        return $this->hasMany(User::class, 'user_id', 'id');
+        return $this->hasMany(Uploads::class, 'user_id', 'id');
     }
 }

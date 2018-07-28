@@ -17,3 +17,6 @@ Route::get('/f/{token}/{slug?}', 'UploadController@getfile')->name('api:upload:g
 Route::get('/i/{token}/{slug?}', 'UploadController@getInfo')->name('api:upload:info');
 
 Route::any('login', 'HomeController@login')->name('login');
+Route::middleware(['auth', 'web'])->group(function() {
+    Route::get('files', 'HomeController@files')->name('files');
+});

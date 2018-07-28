@@ -30880,6 +30880,7 @@ h6 {
   line-height: inherit;
 }
 
+.ripple,
 .ripple p,
 .ripple span,
 .ripple div,
@@ -30896,6 +30897,7 @@ h6 {
   -moz-user-select: none !important;
   -ms-user-select: none !important;
   user-select: none !important;
+  cursor: context-menu;
 }
 
 html,
@@ -31002,5 +31004,19 @@ body {
     -webkit-transform: translate(-50%, -50%) rotate(360deg);
     transform: translate(-50%, -50%) rotate(360deg);
   }
+}
+
+.card-header .card-controls {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  -webkit-transform: translate(-50%, -50%);
+          transform: translate(-50%, -50%);
+  margin-right: 10px;
+  z-index: 0;
+}
+
+.card-header .card-controls.show {
+  z-index: 99999;
 }
 

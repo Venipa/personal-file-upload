@@ -15,12 +15,14 @@
                             <div class="form-group">
                                 <label for="mail">Email</label>
                                 <input type="email"
+                                       required
                                        class="form-control" name="email" id="mail" aria-describedby="helpId" placeholder="">
                                 <small id="helpId" class="form-text text-muted">Use valid mails, temporary emails will be deleted upon detection</small>
                             </div>
                             <div class="form-group">
                                 <label for="password">Password</label>
                                 <input type="password"
+                                       required
                                        class="form-control" name="password" id="password" aria-describedby="helpId"
                                        placeholder="">
                                 <small id="helpId" class="form-text text-muted">Requirement: Minimum Length of 5 characters</small>
