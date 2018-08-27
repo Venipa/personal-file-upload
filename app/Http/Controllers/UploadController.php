@@ -4,7 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Uploads;
 use App\User;
+use App\VideoStream;
 use Illuminate\Http\Request;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
@@ -13,7 +16,7 @@ class UploadController extends Controller
 
     public function upload(Request $r) {
         $v = Validator::make($r->all(), [
-            'key' => 'required|exists:sqlite.users,apikey',
+            'key' => 'required|exists:users,apikey',
             'file' => 'required|file|max:' . (100*1024)
         ]);
         if($v->fails()) return $v->errors();
@@ -93,13 +96,21 @@ class UploadController extends Controller
         ]);
         if($v->fails()) return $v->errors();
         $file = Uploads::where('share_token', $token)->first();
-        $fs = Storage::disk('uploads')->getDriver();
-        $stream = $fs->readStream($file->share_token);
-        return response()->stream(function() use($stream) {
-            while(ob_get_level() > 0) ob_end_flush();
-            fpassthru($stream);
-        }, 200,[
-            'Content-Type' => $file->filemime,
-        ]);
+        if(str_contains($file->filemime, ['video/', 'audio/'])) {
+            $fs = new UploadedFile(storage_path("app\\uploads\\$file->share_token"), $file->filename);
+            $stream = new \App\VideoStream($fs, $file);
+            return response()->stream(function() use ($stream) {
+                $stream->start();
+            });
+        } else {
+            $fs = Storage::disk('uploads')->getDriver();
+            $stream = $fs->readStream($file->share_token);
+            return response()->stream(function() use($stream) {
+                while(ob_get_level() > 0) ob_end_flush();
+                fpassthru($stream);
+            }, 200,[
+                'Content-Type' => $file->filemime,
+            ]);
+        }
     }
 }
