@@ -12,17 +12,14 @@ use Illuminate\Support\Facades\Validator;
 class ShortenerController extends Controller
 {
     public function shorten(Request $r) {
-        $isAuthed = [];
-        if(!Auth::check()) {
-            $isAuthed = ['key' => 'required|exists:users,apikey'];
-        }
-        $v = Validator::make($r->merge($isAuthed)->all(), [
+        $v = Validator::make($r->all(), [
+            'key' => 'required|exists:users,apikey',
             'url' => 'required|url',
             'password' => 'sometimes|required|nullable|min:4|max:255',
             'wait' => 'sometimes|required|nullable|numeric|max:' . 60*5
         ]);
         if($v->fails()) return $v->errors();
-        $user = count($isAuthed) > 0 ? User::where('apikey', $r->input('key')) : Auth::user();
+        $user = User::where('apikey', $r->input('key'))->first();
         $token = str_random(8);
         $deletiontoken = str_random(20);
         while(Links::where('token', $token)->count() > 0) {
