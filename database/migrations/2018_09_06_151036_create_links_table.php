@@ -22,7 +22,7 @@ class CreateLinksTable extends Migration
             $table->unsignedInteger('wait')->nullable();
             $table->unsignedInteger('userId');
             $table->unsignedInteger('views')->default(0);
-            $table->foreign('userId')->references('id')->on('users');
+            $table->foreign('userId')->references('id')->on('users')->ondelete('cascade')->onupdate('cascade');
             $table->timestamps();
         });
     }
