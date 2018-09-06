@@ -22,7 +22,7 @@ class ShortenerController extends Controller
             'wait' => 'sometimes|required|nullable|numeric|max:' . 60*5
         ]);
         if($v->fails()) return $v->errors();
-        $user = count($isAuthed) > 0 ? User::findByKey($r->input('key')) : Auth::user();
+        $user = count($isAuthed) > 0 ? User::where('apikey', $r->input('key')) : Auth::user();
         $token = str_random(8);
         $deletiontoken = str_random(20);
         while(Links::where('token', $token)->count() > 0) {
