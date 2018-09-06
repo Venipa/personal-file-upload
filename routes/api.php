@@ -15,3 +15,6 @@ use Illuminate\Http\Request;
 
 Route::post('/upload', 'UploadController@upload')->name('api:upload:add');
 Route::get('/delete/upload/{token}', 'UploadController@delupload')->name('api:upload:delete');
+
+Route::post('/link', 'ShortenerController@shorten')->name('api:link:add');
+Route::get('/delete/link/{token}', 'ShortenerController@delLink')->name('api:link:delete');

@@ -29,4 +29,15 @@ class User extends Authenticatable
     public function files() {
         return $this->hasMany(Uploads::class, 'user_id', 'id');
     }
+    public function links() {
+        return $this->hasMany(Links::class, 'userId', 'id');
+    }
+
+    /**
+     * @param $apikey
+     * @return User
+     */
+    public function findByKey($apikey) {
+        return $this->where('apikey', $apikey)->first();
+    }
 }

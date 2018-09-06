@@ -3,28 +3,29 @@
 @section('body')
     <div class="container">
         <div class="row justify-content-center mb-1">
-            <div data-tooltip="{{config('app.name')}} - Files" class="sitelogo md"></div>
+            <div data-tooltip="{{config('app.name')}} - Links" class="sitelogo md"></div>
             <div class="col-md-12 text-center mb-3">
-                <h5>Files</h5>
+                <h5>Links</h5>
             </div>
         </div>
         <div class="row justify-content-center">
             <div class="col-md-8">
-                @if($user->files->count() == 0)
+                @if($user->links->count() == 0)
                     <div class="alert alert-danger">
-                        No Files yet found
+                        No Links found yet
                     </div>
-                    @else
+                @else
+                    <a href="{{route('link:add')}}" class="btn btn-primary btn-raised my-2">Create Link</a>
                 <div class="card">
                     <div id="accordion">
-                        @foreach($user->files as $i=>$file)
+                        @foreach($user->links as $i => $link)
                             <div class="card">
                                 <div class="card-header p-0">
                                     <div class="row justify-content-around">
                                         <div class="col-md-12">
                                             <div class="ripple p-3" id="files-{{$i}}-heading" data-toggle="collapse"
                                                  data-target="#files-{{$i}}" aria-expanded="false"
-                                                 aria-controls="files-{{$i}}">{{$file->filename}}</div>
+                                                 aria-controls="files-{{$i}}">{{$link->getUrlName()}}</div>
                                             <div class="dropdown card-controls">
                                                 <button data-ignore-parent="#files-{{$i}}-heading"
                                                         class="btn bmd-btn-icon dropdown-toggle" type="button" id="ex1"
@@ -33,10 +34,8 @@
                                                     <i class="mdi mdi-dots-vertical"></i>
                                                 </button>
                                                 <div class="dropdown-menu dropdown-menu-left" aria-labelledby="ex1">
-                                                    <a data-ignore-parent="#files-{{$i}}-heading" class="dropdown-item" download="{{$file->filename}}"
-                                                       href="{{route('api:upload:get', $file->share_token)}}">Download</a>
                                                     <a data-ignore-parent="#files-{{$i}}-heading" class="dropdown-item"
-                                                       href="{{route('api:upload:get', $file->share_token)}}" target="_blank">Open</a>
+                                                       href="{{route('api:link:get', $link->token)}}" target="_blank">Open</a>
                                                 </div>
                                             </div>
                                         </div>
@@ -55,16 +54,16 @@
                                             </thead>
                                             <tbody>
                                             <tr>
-                                                <td class="text-right font-weight-bold">Filename:</td>
-                                                <td>{{$file->filename}}</td>
+                                                <td class="text-right font-weight-bold">Url:</td>
+                                                <td><a href="{{route('api:link:get', ['token' => $link->token, 'slug' => $link->getSlug()])}}" target="_blank">{{$link->url}}</a></td>
                                             </tr>
                                             <tr>
-                                                <td class="text-right font-weight-bold">Filetype:</td>
-                                                <td>{{$file->filetype}}</td>
+                                                <td class="text-right font-weight-bold">Deletion Url:</td>
+                                                <td><a href="{{route('api:link:delete', ['token' => $link->deltoken])}}" target="_blank">{{$link->getSlug()}}</a></td>
                                             </tr>
                                             <tr>
-                                                <td class="text-right font-weight-bold">Filemime:</td>
-                                                <td>{{$file->filemime}}</td>
+                                                <td class="text-right font-weight-bold">Password:</td>
+                                                <td>{{str_repeat("*", 8)}}</td>
                                             </tr>
                                             </tbody>
                                         </table>
