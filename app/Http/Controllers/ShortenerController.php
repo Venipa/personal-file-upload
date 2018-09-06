@@ -85,7 +85,7 @@ class ShortenerController extends Controller
             'token' => 'required|exists:links,deltoken'
         ]);
         if($v->fails()) return $v->errors();
-        $link = Links::where('token', $token)->delete();
+        $link = Links::where('deltoken', $token)->delete();
         return response()->json([
             'success' => $link,
             'token' => $token
