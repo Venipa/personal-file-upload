@@ -21,6 +21,7 @@ class CreateLinksTable extends Migration
             $table->string('password')->nullable();
             $table->unsignedInteger('wait')->nullable();
             $table->unsignedInteger('userId');
+            $table->unsignedInteger('views')->default(0);
             $table->foreign('userId')->references('id')->on('users');
             $table->timestamps();
         });

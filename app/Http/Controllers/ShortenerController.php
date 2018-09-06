@@ -103,6 +103,8 @@ class ShortenerController extends Controller
         if(($link->password != null || $link->wait != null) && !$ignorePass) {
             return view('linkblock', ['link' => $link]);
         } else {
+            $link->views++;
+            $link->save();
             return redirect()->to($link->url, 302, [
                 'PF-UPLOAD-REDIRECT' => $r->getHost()
             ]);
