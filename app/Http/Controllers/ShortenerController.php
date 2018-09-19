@@ -92,6 +92,7 @@ class ShortenerController extends Controller
         ]);
     }
     public function getLink(Request $r, $token, $slug = null, $ignorePass = false) {
+        $token = preg_replace('/\..+$/', '',$token);
         $v = Validator::make($r->merge(['token' => $token])->all(), [
             'token' => 'required|exists:links,token'
         ]);
