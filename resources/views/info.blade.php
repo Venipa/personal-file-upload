@@ -16,7 +16,7 @@
             <div class="row mt-2 mb-2 justify-content-center">
                 <div class="col-md-8">
                     <div class="card rounded">
-                        <video class="_plyr">
+                        <video class="_plyr" @if($file->thumb_token != null) poster="{{$file->getLatestThumbnailUrl()}}" @endif >
                             <source src="{{route('api:upload:get', $file->share_token)}}" type="{{$file->filemime}}" />
                         </video>
                     </div>

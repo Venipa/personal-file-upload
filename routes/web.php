@@ -11,8 +11,11 @@
 |
 */
 
+use Illuminate\Support\Facades\Route;
+
 Route::get('/', 'HomeController@index')->name('index');
 
+Route::get('/thumb/{token}', 'UploadController@getThumb')->name('api:thumb:get');
 Route::get('/f/{token}/{slug?}', 'UploadController@getfile')->name('api:upload:get');
 Route::get('/i/{token}/{slug?}', 'UploadController@getInfo')->name('api:upload:info');
 Route::get('/s/{token}/{slug?}', 'ShortenerController@getLink')->name('api:link:get');

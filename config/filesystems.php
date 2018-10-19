@@ -43,6 +43,10 @@ return [
 
     'disks' => [
 
+        'localstore' => [
+            'driver' => 'local',
+            'root' => storage_path(),
+        ],
         'local' => [
             'driver' => 'local',
             'root' => storage_path('app'),
@@ -57,6 +61,10 @@ return [
         'uploads' => [
             'driver' => 'local',
             'root' => storage_path('app/uploads'),
+        ],
+        'thumbnails' => [
+            'driver' => 'local',
+            'root' => storage_path('app/thumbnails'),
         ],
         's3' => [
             'driver' => 's3',

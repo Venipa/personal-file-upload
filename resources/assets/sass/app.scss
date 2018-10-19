@@ -24,7 +24,7 @@ html, body {
   overflow: hidden;
 }
 .rounded {
-  .plyr__controls {
+  .plyr__controls, .plyr, .plyr__video-wrapper {
     @include border-radius($border-radius);
   }
 }

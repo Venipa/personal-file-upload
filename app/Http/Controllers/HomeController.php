@@ -2,14 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\Uploads;
 use App\User;
 use GrahamCampbell\GitLab\Facades\GitLab;
 use GrahamCampbell\GitLab\GitLabManager;
 use Illuminate\Http\Request;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Pbmedia\LaravelFFMpeg\FFMpegFacade;
+use FFMpeg as ffm;
+use FFMpeg\FFMpeg;
 
 class HomeController extends Controller
 {

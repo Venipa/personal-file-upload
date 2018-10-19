@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\ProcessVideoThumbnail;
+use App\Media;
 use App\Uploads;
 use App\User;
 use App\VideoStream;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
@@ -32,19 +35,22 @@ class UploadController extends Controller
             while(Uploads::where('deletion_token', $deletiontoken)->count() > 0) {
                 $deletiontoken = str_random(20);
             }
+            $result = $file->storeAs('', $sharetoken, 'uploads');
+            Log::debug($result);
+            $ufile = Uploads::create([
+                'share_token' => $sharetoken,
+                'deletion_token' => $deletiontoken,
+                'filename' => pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME),
+                'filemime' => $file->getClientMimeType(),
+                'filetype' => $file->getClientOriginalExtension() ?? (new \Mimey\MimeTypes($file->getClientMimeType()))->getExtension(),
+                'filesize' => $file->getSize(),
+                'user_id' => $user->id,
+                'hash' => md5_file($file->getRealPath())
+            ]);
             try {
-                $result = $file->storeAs('', $sharetoken, 'uploads');
-            } finally {
-                $ufile = Uploads::create([
-                    'share_token' => $sharetoken,
-                    'deletion_token' => $deletiontoken,
-                    'filename' => pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME),
-                    'filemime' => $file->getClientMimeType(),
-                    'filetype' => $file->getClientOriginalExtension() ?? (new \Mimey\MimeTypes($file->getClientMimeType()))->getExtension(),
-                    'filesize' => $file->getSize(),
-                    'user_id' => $user->id,
-                    'hash' => md5_file($file->getRealPath())
-                ]);
+                ProcessVideoThumbnail::dispatchNow($ufile);
+            } catch (\Exception $ex) {
+                Log::error($ex);
             }
         }
         return response()->json([
@@ -88,7 +94,33 @@ class UploadController extends Controller
         $file->humsize = $this->bytesToHuman($file->filesize);
         return view('info')->with(['file' => $file]);
     }
-    public function getfile($token, $slug = null, Request $r) {
+
+    /**
+     * @param Uploads $file
+     * @return Media
+     */
+    private function getThumbnail(Uploads $file) {
+        return $file->getLatestThumbnail();
+    }
+    public function getThumb($token) {
+        $v = Validator::make([
+            'key' => $token
+        ], [
+            'key' => 'required|exists:uploads,thumb_token',
+        ]);
+        if($v->fails()) return $v->errors();
+        $file = Uploads::where('thumb_token', $token)->first();
+        $media = $this->getThumbnail($file);
+        $fs = Storage::disk('thumbnails')->getDriver();
+        $stream = $fs->readStream($file->thumb_token);
+        return response()->stream(function() use($stream) {
+            while(ob_get_level() > 0) ob_end_flush();
+            fpassthru($stream);
+        }, 200,[
+            'Content-Type' => $media->mime_type,
+        ]);
+    }
+    public function getfile($token, $slug = null) {
         $v = Validator::make([
             'key' => $token
         ], [
@@ -98,7 +130,7 @@ class UploadController extends Controller
         $file = Uploads::where('share_token', $token)->first();
         if(str_contains($file->filemime, ['video/', 'audio/'])) {
             $fs = new UploadedFile(storage_path("app/uploads")."/$file->share_token", $file->filename);
-            $stream = new \App\VideoStream($fs, $file);
+            $stream = new VideoStream($fs, $file);
             return response()->stream(function() use ($stream) {
                 $stream->start();
             });

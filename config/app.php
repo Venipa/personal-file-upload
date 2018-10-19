@@ -150,7 +150,7 @@ return [
         /*
          * Package Service Providers...
          */
-
+        Pbmedia\LaravelFFMpeg\FFMpegServiceProvider::class,
         /*
          * Application Service Providers...
          */
@@ -209,6 +209,7 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
         'GitLab' => GrahamCampbell\GitLab\Facades\GitLab::class,
+        'FFMpeg' => Pbmedia\LaravelFFMpeg\FFMpegFacade::class
 
     ],
 
