@@ -43,7 +43,13 @@ class ProcessVideoThumbnail implements ShouldQueue
             'default_disk' => 'local',
             'ffmpeg.binaries'  => storage_path(''). '/ffmpeg.exe',
             'ffprobe.binaries' => storage_path(''). '/ffprobe.exe'
-        ] : config('laravel-ffmpeg'));
+        ] : [
+            'default_disk' => 'local',
+            'ffmpeg.binaries' => '/usr/bin/ffmpeg',
+            'ffprobe.binaries' => '/usr/bin/ffprobe',
+            'timeout' => 3600,
+            'ffmpeg.threads' => '8'
+        ]);
         $media = $ffmpeg->open(storage_path('/app/uploads'). "/$video->share_token");
         $dur = $media->getStreams()->first()->get('duration');
         $frame = $media->frame(new ffm\Coordinate\TimeCode(0,0,0, $dur/2));
