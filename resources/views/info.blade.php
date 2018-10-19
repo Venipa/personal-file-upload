@@ -6,6 +6,7 @@
         if($file->thumb_token != null) {
             $logo =  $file->getLatestThumbnailUrl();
         }
+    $author = config('app.author');
     @endphp
     <meta name="description" content="{{$file->filename}}">
     @if($file->thumb_token != null)

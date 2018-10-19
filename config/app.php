@@ -14,6 +14,7 @@ return [
     */
 
     'name' => env('APP_NAME', 'SiteName'),
+    'author' => env('APP_AUTHOR', 'Cascade#0001 / Venipa'),
 
     /*
     |--------------------------------------------------------------------------
