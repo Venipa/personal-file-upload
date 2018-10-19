@@ -16,13 +16,13 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        View::share('git', (object)Cache::get('gitlab_project', function() {
+        /*View::share('git', (object)Cache::get('gitlab_project', function() {
             try {
                 return GitLab::connection('main')->projects()->show(config('gitlab.defaultProjectId'));
             } catch(\Exception $e) {
                 return null;
             }
-        }, 5));
+        }, 5));*/
     }
 
     /**

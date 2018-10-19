@@ -1,6 +1,7 @@
 @import '~bootstrap-material-design/scss/bootstrap-material-design';
 @import '~@mdi/font/scss/materialdesignicons';
 @import '~tippy.js/dist/themes/light.css';
+@import '~plyr/src/sass/plyr';
 .bmd-btn-icon {
   line-height: 1.25!important;
   & .mdi {
@@ -18,6 +19,14 @@
 }
 html, body {
   height: 100%;
+}
+.no-overflow {
+  overflow: hidden;
+}
+.rounded {
+  .plyr__controls {
+    @include border-radius($border-radius);
+  }
 }
 .pos-center {
   position: absolute;
