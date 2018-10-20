@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use GrahamCampbell\GitLab\Facades\GitLab;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
@@ -23,6 +24,7 @@ class AppServiceProvider extends ServiceProvider
                 return null;
             }
         }, 5));*/
+        Schema::defaultStringLength(191);
     }
 
     /**
