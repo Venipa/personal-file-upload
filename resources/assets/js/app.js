@@ -1,6 +1,7 @@
 
 window.$ = window.jQuery = require('jquery');
 window.Popper = require('popper.js').default;
+window.fit = require('./fit');
 import Plyr from 'plyr';
 var tippy = require('tippy.js');
 

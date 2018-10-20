@@ -121,6 +121,16 @@ class UploadController extends Controller
             'Content-Type' => $media->mime_type,
         ]);
     }
+    public function videoEmbed($token, $slug = null) {
+        $v = Validator::make([
+            'key' => $token
+        ], [
+            'key' => 'required|exists:uploads,share_token',
+        ]);
+        if($v->fails()) return $v->errors();
+        $file = Uploads::where('share_token', $token)->with('user')->first();
+        return view('embed')->with(['file' => $file]);
+    }
     public function getfile($token, $slug = null) {
         $v = Validator::make([
             'key' => $token
