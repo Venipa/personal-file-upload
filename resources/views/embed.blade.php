@@ -14,7 +14,7 @@
         <meta name="image" content="{{$logo}}">
         <meta itemprop="image" content="{{$logo}}">
         <meta name="twitter:image:src" content="{{$logo}}">
-        <meta name="og:image" content="{{$logo}}">
+        <meta property="og:image" content="{{$logo}}">
     @endif
     <!-- Schema.org for Google -->
     <meta itemprop="name" content="{{$sitename}}">
@@ -26,11 +26,11 @@
     <meta name="twitter:site" content="{{url()->current()}}">
     <meta name="twitter:creator" content="{{$author}}">
     <!-- Open Graph general (Facebook, Pinterest & Google+) -->
-    <meta name="og:title" content="{{$sitename}}">
-    <meta name="og:description" content="{{$sitedescription}}">
-    <meta name="og:url" content="{{url()->current()}}">
-    <meta name="og:site_name" content="{{$sitename}}">
-    <meta name="og:type" content="website">
+    <meta property="og:title" content="{{$sitename}}">
+    <meta property="og:description" content="{{$sitedescription}}">
+    <meta property="og:url" content="{{url()->current()}}">
+    <meta property="og:site_name" content="{{$sitename}}">
+    <meta property="og:type" content="website">
     @if(preg_match('/video\//', $file->filemime))
         <meta name="twitter:card" content="player">
         <meta name="twitter:player" content="{{$file->getEmbedUrl()}}">
