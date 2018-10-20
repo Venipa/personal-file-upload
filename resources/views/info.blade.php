@@ -37,6 +37,8 @@
         <meta name="twitter:player:height" content="320">
         <meta name="twitter:player:width" content="480">
         <meta property="og:video" content="{{$file->getFileUrl()}}">
+        <meta property="og:video:height" content="320">
+        <meta property="og:video:width" content="480">
         <meta property="og:video:type" content="{{$file->filemime}}" />
 
     @elseif(preg_match('/audio\//', $file->filemime))
