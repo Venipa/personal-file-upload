@@ -40,7 +40,7 @@ class CreateMissingThumbnails extends Command
      */
     public function handle()
     {
-        $files = Uploads::where('filemime', 'LIKE', '%video/%')->where('thumb_token', null)->all();
+        $files = Uploads::where('filemime', 'LIKE', '%video/%')->where('thumb_token', null)->get();
         foreach($files as $file) {
             if($file->thumb_token != null) return;
             $job = (new ProcessVideoThumbnail($file))->delay(5);
