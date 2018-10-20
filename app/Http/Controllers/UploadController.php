@@ -48,8 +48,8 @@ class UploadController extends Controller
                 'hash' => md5_file($file->getRealPath())
             ]);
             try {
-                $job = (new ProcessVideoThumbnail($ufile))->delay(10);
-                $this->dispatch($job);
+                $job = (new ProcessVideoThumbnail($ufile))->delay(5);
+                dispatch($job);
             } catch (\Exception $ex) {
                 Log::error($ex);
             }
