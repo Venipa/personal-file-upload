@@ -1,5 +1,6 @@
 @extends('layouts.app')
 @section('head')
+    <link type="application/json+oembed" href="{{route('api:oembed:upload', $file->share_token)}}" />
     @php
         $sitename = config('app.name') . " - " . $file->filename;
         $sitedescription = "Who doesnt need a personal Storage for Media and other things, this Storage Service is perfect with use of ShareX. Thats why i made an Storage Service which you can share things fast and easy.";
@@ -12,6 +13,7 @@
     @if($file->thumb_token != null)
         <meta name="image" content="{{$logo}}">
         <meta itemprop="image" content="{{$logo}}">
+        <meta name="twitter:image" content="{{$logo}}">
         <meta name="twitter:image:src" content="{{$logo}}">
         <meta name="og:image" content="{{$logo}}">
         @endif
@@ -30,7 +32,23 @@
     <meta name="og:url" content="{{url()->current()}}">
     <meta name="og:site_name" content="{{$sitename}}">
     <meta name="og:type" content="website">
-    <link type="application/json+oembed" href="{{route('api:oembed:upload', $file->share_token)}}" />
+    @if(preg_match('/video\//', $file->filemime))
+        <meta name="twitter:player" content="{{$file->getEmbedUrl()}}">
+        <meta name="twitter:player:height" content="480px">
+        <meta name="twitter:player:width" content="320px">
+        <meta name="og:video" content="{{$file->getFileUrl()}}">
+        <meta property="og:video:type" content="{{$file->filemime}}" />
+
+    @elseif(preg_match('/audio\//', $file->filemime))
+        <meta name="twitter:player" content="{{$file->getEmbedUrl()}}">
+        <meta name="twitter:player:height" content="60px">
+        <meta name="twitter:player:width" content="400px">
+        <meta name="og:audio" content="{{$file->getFileUrl()}}">
+        <meta property="og:audio:type" content="{{$file->filemime}}" />
+    @elseif(preg_match('/image\//', $file->filemime))
+        <meta property="og:image" content="{{$file->getFileUrl()}}" />
+        <meta property="og:image:type" content="{{$file->filemime}}" />
+    @endif
     @endsection
 @section('body')
 
