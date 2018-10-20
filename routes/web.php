@@ -28,3 +28,6 @@ Route::middleware(['auth', 'web'])->group(function() {
     Route::get('create/link', 'ShortenerController@createLink')->name('link:add');
     Route::post('create/link', 'ShortenerController@postLink');
 });
+Route::prefix('oembed/v1')->group(function() {
+    Route::get('upload/{token}/{slug?}', 'oEmbedController@upload')->name('api:oembed:upload');
+});

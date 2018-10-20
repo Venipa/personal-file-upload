@@ -30,6 +30,7 @@
     <meta name="og:url" content="{{url()->current()}}">
     <meta name="og:site_name" content="{{$sitename}}">
     <meta name="og:type" content="website">
+    <link type="application/json+oembed" href="{{route('api:oembed:upload', $file->share_token)}}" />
     @endsection
 @section('body')
 

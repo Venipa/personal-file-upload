@@ -33,4 +33,7 @@ class Uploads extends Model implements HasMedia
     public function getLatestThumbnailUrl() {
         return route('api:thumb:get', $this->thumb_token);
     }
+    public function getFileUrl() {
+        return route('api:upload:get', [$this->share_token, str_slug($this->filename)]);
+    }
 }
