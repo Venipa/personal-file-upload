@@ -8,6 +8,11 @@
     line-height: inherit;
   }
 }
+.plyr {
+  .plyr__video-wrapper video {
+    height: 100%!important;
+  }
+}
 .ripple {
   &, p, span, div, button, a, label, h1,h2,h3,h4,h5,h6 {
     -webkit-user-select: none!important;
