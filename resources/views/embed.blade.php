@@ -35,9 +35,9 @@
 @section('body')
     @if (preg_match('/video\//', $file->filemime))
         <script>
-            window.onload = function() {
+            /*window.onload = function() {
                 fit($('video, audio')[0], $('.plyr')[0]);
-            };
+            };*/
         </script>
         <style>
             .plyr {
