@@ -1,5 +1,6 @@
 @extends('layouts.embed')
 @section('head')
+    <link type="application/json+oembed" href="{{route('api:oembed:upload', $file->share_token)}}" />
     @php
         $sitename = config('app.name') . " - " . $file->filename;
         $sitedescription = "Who doesnt need a personal Storage for Media and other things, this Storage Service is perfect with use of ShareX. Thats why i made an Storage Service which you can share things fast and easy.";
@@ -30,7 +31,6 @@
     <meta name="og:url" content="{{url()->current()}}">
     <meta name="og:site_name" content="{{$sitename}}">
     <meta name="og:type" content="website">
-    <link type="application/json+oembed" href="{{route('api:oembed:upload', $file->share_token)}}" />
 @endsection
 @section('body')
     @if (preg_match('/video\//', $file->filemime))
