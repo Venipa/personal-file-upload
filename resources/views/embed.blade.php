@@ -31,6 +31,17 @@
     <meta name="og:url" content="{{url()->current()}}">
     <meta name="og:site_name" content="{{$sitename}}">
     <meta name="og:type" content="website">
+    @if(preg_match('/video\//', $file->filemime))
+        <meta name="og:video" content="{{$file->getFileUrl()}}">
+        <meta property="og:video:type" content="{{$file->filemime}}" />
+
+    @elseif(preg_match('/audio\//', $file->filemime))
+        <meta name="og:audio" content="{{$file->getFileUrl()}}">
+        <meta property="og:audio:type" content="{{$file->filemime}}" />
+    @elseif(preg_match('/image\//', $file->filemime))
+        <meta property="og:image" content="{{$file->getFileUrl()}}" />
+        <meta property="og:image:type" content="{{$file->filemime}}" />
+    @endif
 @endsection
 @section('body')
     @if (preg_match('/video\//', $file->filemime))
