@@ -34,8 +34,8 @@
     @if(preg_match('/video\//', $file->filemime))
         <meta name="twitter:card" content="player">
         <meta name="twitter:player" content="{{$file->getEmbedUrl()}}">
-        <meta name="twitter:player:height" content="480">
-        <meta name="twitter:player:width" content="320">
+        <meta name="twitter:player:height" content="320">
+        <meta name="twitter:player:width" content="480">
         <meta name="og:video" content="{{$file->getFileUrl()}}">
         <meta property="og:video:type" content="{{$file->filemime}}" />
 
@@ -43,7 +43,7 @@
         <meta name="twitter:card" content="player">
         <meta name="twitter:player" content="{{$file->getEmbedUrl()}}">
         <meta name="twitter:player:height" content="60">
-        <meta name="twitter:player:width" content="400">
+        <meta name="twitter:player:width" content="480">
         <meta name="og:audio" content="{{$file->getFileUrl()}}">
         <meta property="og:audio:type" content="{{$file->filemime}}" />
     @elseif(preg_match('/image\//', $file->filemime))
