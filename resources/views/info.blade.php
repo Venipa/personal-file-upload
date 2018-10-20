@@ -2,8 +2,8 @@
 @section('head')
     <link type="application/json+oembed" href="{{route('api:oembed:upload', $file->share_token)}}" />
     @php
-        $sitename = config('app.name') . " - " . $file->filename;
-        $sitedescription = "Who doesnt need a personal Storage for Media and other things, this Storage Service is perfect with use of ShareX. Thats why i made an Storage Service which you can share things fast and easy.";
+        $sitename =  $file->filename;
+        $sitedescription = config('app.name') . " - " . "Who doesnt need a personal Storage for Media and other things, this Storage Service is perfect with use of ShareX. Thats why i made an Storage Service which you can share things fast and easy.";
         if($file->thumb_token != null) {
             $logo =  $file->getLatestThumbnailUrl();
         }

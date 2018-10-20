@@ -9,8 +9,13 @@
   }
 }
 .plyr {
-  .plyr__video-wrapper video {
-    height: 100%!important;
+  .plyr__video-wrapper {
+    & {
+      width: 100%;
+    }
+    &, video {
+      height: 100%!important;
+    }
   }
 }
 .ripple {
