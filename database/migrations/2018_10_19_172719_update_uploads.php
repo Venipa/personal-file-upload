@@ -13,8 +13,10 @@ class UpdateUploads extends Migration
      */
     public function up()
     {
-        mkdir(storage_path('app/tmp'));
-        mkdir(storage_path('app/thumbnails'));
+        try {
+            mkdir(storage_path('app/tmp'));
+            mkdir(storage_path('app/thumbnails'));
+        } catch (\Exception $e) {}
         Schema::table('uploads', function($table)
         {
             $table->string('thumb_token', 100)->nullable();
