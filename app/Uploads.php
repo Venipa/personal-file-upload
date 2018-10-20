@@ -36,4 +36,7 @@ class Uploads extends Model implements HasMedia
     public function getFileUrl() {
         return route('api:upload:get', [$this->share_token, str_slug($this->filename)]);
     }
+    public function getEmbedUrl() {
+        return route('api:upload:embed', [$this->share_token, str_slug($this->filename)]);
+    }
 }

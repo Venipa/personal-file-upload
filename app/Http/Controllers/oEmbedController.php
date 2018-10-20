@@ -38,7 +38,7 @@ class oEmbedController extends Controller
             'referrer' => ''
         ];
         if($file->thumb_token != null || preg_match('/audio\//', $file->filemime)) {
-            $data['html'] = '<iframe src="' . $file->getFileUrl() . '" frameborder="0" allowfullscreen />';
+            $data['html'] = '<iframe src="' . $file->getEmbedUrl() . '" frameborder="0" allowfullscreen />';
         } else if(preg_match('/image\//', $file->filemime)) {
             $data['html'] = '<img src="' . $file->getFileUrl() . '" frameborder="0" allowfullscreen />';
         }
