@@ -8,14 +8,11 @@
     line-height: inherit;
   }
 }
-.plyr {
-  .plyr__video-wrapper {
-    & {
-      width: 100%;
-    }
-    &, video {
-      height: 100%!important;
-    }
+.plyr__video-wrapper {
+  width: 100%!important;
+  height: 100%!important;
+  .plyr video, video {
+    height: 100%!important;
   }
 }
 .ripple {
