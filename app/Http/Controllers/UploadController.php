@@ -144,7 +144,9 @@ class UploadController extends Controller
             $stream = new VideoStream($fs, $file);
             return response()->stream(function() use ($stream) {
                 $stream->start();
-            });
+            }, 200,[
+                'Content-Type' => $file->filemime,
+            ]);
         } else {
             $fs = Storage::disk('uploads')->getDriver();
             $stream = $fs->readStream($file->share_token);
