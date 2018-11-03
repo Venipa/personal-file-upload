@@ -141,6 +141,10 @@ class UploadController extends Controller
         $file = Uploads::where('share_token', $token)->first();
         if(str_contains($file->filemime, ['video/', 'audio/'])) {
             $fs = new UploadedFile(storage_path("app/uploads")."/$file->share_token", $file->filename);
+            if(preg_match('/\/mpeg/', $file->filemime)) {
+                $file->filemime = "audio/mp3";
+                $file->save();
+            }
             $stream = new VideoStream($fs, $file);
             return response()->stream(function() use ($stream) {
                 $stream->start();
