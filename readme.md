@@ -1,3 +1,9 @@
+### Get Started
+More to come soon...
+
+this is an attempt to make an Personal File Storage with Laravel.
+
+
 ### License
 BSD 2-Clause License
 
