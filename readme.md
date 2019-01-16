@@ -2,6 +2,7 @@
 More to come soon...
 
 this is an attempt to make an Personal File Storage with Laravel.
+([Supports ShareX](https://github.com/ShareX/ShareX))
 
 
 ### License
