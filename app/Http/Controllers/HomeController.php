@@ -38,7 +38,9 @@ class HomeController extends Controller
         }
     }
     public function files() {
-        $user = Auth::user()->with('files')->first();
+        $user = Auth::user()->with(['files' => function($q) {
+            return $q->paginate(25);
+        }])->first();
         return view('files')->with(['user' => $user]);
     }
 }

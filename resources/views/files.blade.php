@@ -74,6 +74,9 @@
                         @endforeach
                     </div>
                 </div>
+                <div class="d-flex justify-content-center">
+                    {{ $user->files->links() }}
+                </div>
                 @endif
 
                 <div class="mt-5 mb-3">

@@ -150,6 +150,7 @@ class UploadController extends Controller
                 $stream->start();
             }, 200,[
                 'Content-Type' => $file->filemime,
+                'Content-Disposition' => 'inline; ' . $file->filename
             ]);
         } else {
             $fs = Storage::disk('uploads')->getDriver();
@@ -159,6 +160,7 @@ class UploadController extends Controller
                 fpassthru($stream);
             }, 200,[
                 'Content-Type' => $file->filemime,
+                'Content-Disposition' => 'inline; ' . $file->filename
             ]);
         }
     }
