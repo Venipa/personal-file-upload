@@ -10,14 +10,15 @@
         </div>
         <div class="row justify-content-center">
             <div class="col-md-8">
-                @if($user->files->count() == 0)
+                <h3>Logged in as {{$user->name}}</h3>
+                @if($files->count() == 0)
                     <div class="alert alert-danger">
                         No Files yet found
                     </div>
                     @else
                 <div class="card">
                     <div id="accordion">
-                        @foreach($user->files as $i=>$file)
+                        @foreach($files as $i=>$file)
                             <div class="card">
                                 <div class="card-header p-0">
                                     <div class="row justify-content-around">
@@ -75,7 +76,7 @@
                     </div>
                 </div>
                 <div class="d-flex justify-content-center">
-                    {{ $user->files->links() }}
+                    {{ $files->links() }}
                 </div>
                 @endif
 
