@@ -53,19 +53,23 @@ class UploadController extends Controller
                 'driver' => $storageDriverKey
             ]);
             try {
-                $storagePath = sha1($ufile->share_token . $ufile->created_at->getTimestamp()) . "/" . $ufile->filename;
-                $result = $file->storePubliclyAs('', $storagePath, [
-                    'disk' => $storageDriverKey ?? config('filesystems.defaultUpload'),
-                    'mime-type' => $ufile->filemime,
-                    'ContentType' => $ufile->filemime,
-                    'content-type' => $ufile->filemime,
-                    'response-content-type' => $ufile->filemime,
-                    'type' => $ufile->filemime,
-                    'response-content-disposition' => 'inline; filename=' . $ufile->filename,
-                    'ContentDisposition' => 'inline; filename=' . $ufile->filename,
-                    'content-disposition' => 'inline; filename=' . $ufile->filename,
-                    'disposition' => 'inline; filename=' . $ufile->filename
-                ]);
+                if ($storageDriver['driver'] !== 'local') {
+                    $storagePath = sha1($ufile->share_token . $ufile->created_at->getTimestamp()) . "/" . $ufile->filename;
+                    $result = $file->storePubliclyAs('', $storagePath, [
+                        'disk' => $storageDriverKey ?? config('filesystems.defaultUpload'),
+                        'mime-type' => $ufile->filemime,
+                        'ContentType' => $ufile->filemime,
+                        'content-type' => $ufile->filemime,
+                        'response-content-type' => $ufile->filemime,
+                        'type' => $ufile->filemime,
+                        'response-content-disposition' => 'inline; filename=' . $ufile->filename,
+                        'ContentDisposition' => 'inline; filename=' . $ufile->filename,
+                        'content-disposition' => 'inline; filename=' . $ufile->filename,
+                        'disposition' => 'inline; filename=' . $ufile->filename
+                    ]);
+                } else {
+                    $result = $file->storeAs('', $ufile->share_token, $storageDriverKey ?? config('filesystems.defaultUpload'));
+                }
             } catch (Exception $ex) {
                 $ufile->delete();
                 return abort(500);
@@ -88,6 +92,10 @@ class UploadController extends Controller
         $file = Uploads::where('deletion_token', $deltoken)->first();
         $fileHash = sha1($file->share_token . $file->created_at->getTimestamp()) . "/" . $file->filename;
         $store = Storage::disk($file->driver);
+        $storageDriver = config('filesystems.disks.' . $file->driver);
+        if ($storageDriver == null || $storageDriver['driver'] == 'local') {
+            $fileHash = $file->share_token;
+        }
         if ((!$store->exists($fileHash) && $file->delete()) || $store->delete($fileHash) && $file->delete()) {
             return response()->json([
                 'message' => $file->filename . ' has been deleted'
@@ -209,6 +217,9 @@ class UploadController extends Controller
         if ($driverConfig === null) {
             return abort(403);
         }
+        if ($driverConfig['driver'] === 'local') {
+            $fileHash = $file->share_token;
+        }
         if (!$store->exists($fileHash)) {
             return abort(404);
         }
@@ -218,7 +229,7 @@ class UploadController extends Controller
             }
             return redirect()->to($store->url($fileHash));
         }
-        $stream = $fs->readStream();
+        $stream = $fs->readStream($fileHash);
         if (!preg_match('/^(video|audio)\/(ogg|mp3|mp4|mpeg|webm)/', $file->filemime)) {
             return response()->stream(function () use ($stream) {
                 while (ob_get_level() > 0) ob_end_flush();
