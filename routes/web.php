@@ -19,6 +19,7 @@ Route::get('/thumb/{token}', 'UploadController@getThumb')->name('api:thumb:get')
 Route::get('/f/{token}/{slug?}', 'UploadController@getfile')->name('api:upload:get');
 Route::get('/embed/{token}/{slug?}', 'UploadController@videoEmbed')->name('api:upload:embed');
 Route::get('/i/{token}/{slug?}', 'UploadController@getInfo')->name('api:upload:info');
+Route::middleware('web')->post('/request/download/{token}', 'UploadController@getDownload')->name('api:upload:req:download');
 Route::get('/s/{token}/{slug?}', 'ShortenerController@getLink')->name('api:link:get');
 Route::post('/s/{token}/{slug?}', 'ShortenerController@checkPass')->name('api:link:post');
 

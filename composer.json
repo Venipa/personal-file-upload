@@ -13,10 +13,12 @@
         "laravel/tinker": "^1.0",
         "pbmedia/laravel-ffmpeg": "^3.0",
         "php-http/guzzle6-adapter": "^1.1",
+        "probablyrational/wasabi-storage": "^1.1",
         "ralouphie/mimey": "^2.0",
         "spatie/laravel-medialibrary": "^7.5"
     },
     "require-dev": {
+        "barryvdh/laravel-debugbar": "^3.2",
         "filp/whoops": "^2.0",
         "fzaninotto/faker": "^1.4",
         "mockery/mockery": "^1.0",

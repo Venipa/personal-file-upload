@@ -14,6 +14,7 @@ return [
     */
 
     'default' => env('FILESYSTEM_DRIVER', 'local'),
+    'defaultUpload' => env('DEFAULT_UPLOAD_DRIVER', 'uploads'),
 
     /*
     |--------------------------------------------------------------------------
@@ -55,7 +56,7 @@ return [
         'public' => [
             'driver' => 'local',
             'root' => storage_path('app/public'),
-            'url' => env('APP_URL').'/storage',
+            'url' => env('APP_URL') . '/storage',
             'visibility' => 'public',
         ],
         'uploads' => [
@@ -74,6 +75,22 @@ return [
             'bucket' => env('AWS_BUCKET'),
             'url' => env('AWS_URL'),
         ],
+        'cdn:testing' => [
+            'driver' => 'wasabi',
+            'key' => env('WASABI_TEST_ACCESS_KEY_ID'),
+            'secret' => env('WASABI_TEST_SECRET_ACCESS_KEY'),
+            'region' => env('WASABI_TEST_DEFAULT_REGION', 'eu-central-1'),
+            'bucket' => env('WASABI_TEST_BUCKET'),
+            'root' => env('WASABI_TEST_ROOT', '/'),
+        ],
+        'cdn:prod' => [
+            'driver' => 'wasabi',
+            'key' => env('WASABI_ACCESS_KEY_ID'),
+            'secret' => env('WASABI_SECRET_ACCESS_KEY'),
+            'region' => env('WASABI_DEFAULT_REGION', 'eu-central-1'),
+            'bucket' => env('WASABI_BUCKET'),
+            'root' => env('WASABI_ROOT', '/'),
+        ]
 
     ],
 
