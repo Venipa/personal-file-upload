@@ -90,7 +90,7 @@ class UploadController extends Controller
         ]);
         if ($v->fails()) return $v->errors();
         $file = Uploads::where('deletion_token', $deltoken)->first();
-        $fileHash = "{$file->user_id}/" . sha1($file->share_token . $file->created_at->getTimestamp()) . "/" . $file->filename;
+        $fileHash = "{$file->user_id}/" . sha1($file->share_token . $file->created_at->getTimestamp()) . "/";
         $store = Storage::disk($file->driver);
         $storageDriver = config('filesystems.disks.' . $file->driver);
         if ($storageDriver == null || $storageDriver['driver'] == 'local') {
