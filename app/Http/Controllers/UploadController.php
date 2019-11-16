@@ -27,7 +27,7 @@ class UploadController extends Controller
         if ($v->fails()) return $v->errors();
         $user = User::where('apikey', $r->input('key'))->first();
         $file = $r->file('file');
-        $ufile = Uploads::where('hash', md5_file($file->getRealPath()))->first();
+        $ufile = $user->files()->where('hash', md5_file($file->getRealPath()))->first();
         if ($ufile == null) {
             $sharetoken = str_random(10);
             $deletiontoken = str_random(20);
@@ -54,7 +54,7 @@ class UploadController extends Controller
             ]);
             try {
                 if ($storageDriver['driver'] !== 'local') {
-                    $storagePath = sha1($ufile->share_token . $ufile->created_at->getTimestamp()) . "/" . $ufile->filename;
+                    $storagePath = "{$user->id}/" . sha1($ufile->share_token . $ufile->created_at->getTimestamp()) . "/{$ufile->filename}";
                     $result = $file->storePubliclyAs('', $storagePath, [
                         'disk' => $storageDriverKey ?? config('filesystems.defaultUpload'),
                         'mime-type' => $ufile->filemime,
@@ -90,7 +90,7 @@ class UploadController extends Controller
         ]);
         if ($v->fails()) return $v->errors();
         $file = Uploads::where('deletion_token', $deltoken)->first();
-        $fileHash = sha1($file->share_token . $file->created_at->getTimestamp()) . "/" . $file->filename;
+        $fileHash = "{$file->user_id}/" . sha1($file->share_token . $file->created_at->getTimestamp()) . "/" . $file->filename;
         $store = Storage::disk($file->driver);
         $storageDriver = config('filesystems.disks.' . $file->driver);
         if ($storageDriver == null || $storageDriver['driver'] == 'local') {
@@ -178,7 +178,7 @@ class UploadController extends Controller
         ]);
         if ($v->fails()) return redirect()->back()->withErrors($v->errors());
         $file = Uploads::where('share_token', $token)->first();
-        $fileHash = sha1($file->share_token . $file->created_at->getTimestamp()) . "/" . $file->filename;
+        $fileHash = "{$file->user_id}/" . sha1($file->share_token . $file->created_at->getTimestamp()) . "/" . $file->filename;
         $store = Storage::disk($file->driver);
         $fs = $store->getDriver();
         $driverConfig = config('filesystems.disks.' . $file->driver, null);
@@ -210,7 +210,7 @@ class UploadController extends Controller
         ]);
         if ($v->fails()) return $v->errors();
         $file = Uploads::where('share_token', $token)->first();
-        $fileHash = sha1($file->share_token . $file->created_at->getTimestamp()) . "/" . $file->filename;
+        $fileHash = "{$file->user_id}/" . sha1($file->share_token . $file->created_at->getTimestamp()) . "/" . $file->filename;
         $store = Storage::disk($file->driver);
         $fs = $store->getDriver();
         $driverConfig = config('filesystems.disks.' . $file->driver, null);

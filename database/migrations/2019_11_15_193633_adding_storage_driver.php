@@ -14,7 +14,7 @@ class AddingStorageDriver extends Migration
     public function up()
     {
         Schema::table('uploads', function (Blueprint $table) {
-            $table->string('driver')->default(config('filesystems.defaultUpload'));
+            $table->string('driver')->default('uploads');
         });
     }
 
