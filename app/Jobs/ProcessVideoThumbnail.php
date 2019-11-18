@@ -19,13 +19,15 @@ class ProcessVideoThumbnail implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
     private $video;
+    private $tmpFile;
     /**
      * Create a new job instance.
      * @param Uploads $video
      */
-    public function __construct(Uploads $video)
+    public function __construct(Uploads $video, UploadedFile $tmpFile)
     {
         $this->video = $video;
+        $this->tmpFile = $tmpFile;
     }
 
     /**
@@ -36,6 +38,7 @@ class ProcessVideoThumbnail implements ShouldQueue
     public function handle()
     {
         $video = $this->video;
+        $tmpFile = $this->tmpFile;
         if(!preg_match('/video\//', $video->filemime)) return;
         $ffmpeg = FFMpeg::create(Cache::get('currentEnv', function() {
             return preg_match('/Microsoft Windows/', exec('ver'));
@@ -50,7 +53,7 @@ class ProcessVideoThumbnail implements ShouldQueue
             'timeout' => 3600,
             'ffmpeg.threads' => '8'
         ]);
-        $media = $ffmpeg->open(storage_path('/app/uploads'). "/$video->share_token");
+        $media = $ffmpeg->open($tmpFile->getRealPath());
         $dur = $media->getStreams()->first()->get('duration');
         $frame = $media->frame(new ffm\Coordinate\TimeCode(0,0,0, $dur/2));
         $token = str_random();

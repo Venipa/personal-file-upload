@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use Throwable;
 
 class UploadController extends Controller
 {
@@ -68,6 +69,11 @@ class UploadController extends Controller
                         'disposition' => 'inline; filename=' . $ufile->filename
                     ]);
                 } else {
+                    try {
+                        $job = (new ProcessVideoThumbnail($ufile))->dispatchNow();
+                    } catch(Throwable $jobEx) {
+                        Log::error($jobEx->getMessage() . "\n" . $jobEx->getTraceAsString());
+                    }
                     $result = $file->storeAs('', $ufile->share_token, $storageDriverKey ?? config('filesystems.defaultUpload'));
                 }
             } catch (Exception $ex) {
