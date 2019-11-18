@@ -70,7 +70,7 @@ class UploadController extends Controller
                     ]);
                 } else {
                     try {
-                        $job = (new ProcessVideoThumbnail($ufile))->dispatchNow();
+                        $job = (new ProcessVideoThumbnail($ufile, $file))->dispatchNow();
                     } catch(Throwable $jobEx) {
                         Log::error($jobEx->getMessage() . "\n" . $jobEx->getTraceAsString());
                     }
