@@ -19,15 +19,16 @@ class ProcessVideoThumbnail implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
     private $video;
-    private $tmpFile;
+    private $filePath;
     /**
      * Create a new job instance.
      * @param Uploads $video
+     * @param string|false $filePath
      */
-    public function __construct(Uploads $video, UploadedFile $tmpFile)
+    public function __construct(Uploads $video, $filePath)
     {
         $this->video = $video;
-        $this->tmpFile = $tmpFile;
+        $this->filePath = $filePath;
     }
 
     /**
@@ -38,8 +39,10 @@ class ProcessVideoThumbnail implements ShouldQueue
     public function handle()
     {
         $video = $this->video;
-        $tmpFile = $this->tmpFile;
-        if(!preg_match('/video\//', $video->filemime)) return;
+        $filePath = $this->filePath;
+        if(!$filePath || !preg_match('/video\//', $video->filemime)) {
+            return;
+        }
         $ffmpeg = FFMpeg::create(Cache::get('currentEnv', function() {
             return preg_match('/Microsoft Windows/', exec('ver'));
         }) ? [
@@ -53,14 +56,15 @@ class ProcessVideoThumbnail implements ShouldQueue
             'timeout' => 3600,
             'ffmpeg.threads' => '8'
         ]);
-        $media = $ffmpeg->open($tmpFile->getRealPath());
+        $media = $ffmpeg->open($filePath);
         $dur = $media->getStreams()->first()->get('duration');
         $frame = $media->frame(new ffm\Coordinate\TimeCode(0,0,0, $dur/2));
-        $token = str_random();
-        $path = storage_path("app/tmp") . '/' .$token;
+        $token = str_random(20);
+        $path = storage_path("app/tmp") . '/t_' .$token;
         Log::debug($path);
         $result = $frame->save($path);
         Log::debug(implode(',', [$result->getPathfile(), $path]));
         $video->setThumbnail(new UploadedFile($path, $video->filename), $token);
+        @unlink($filePath);
     }
 }

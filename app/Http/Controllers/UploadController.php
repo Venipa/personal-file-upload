@@ -54,8 +54,16 @@ class UploadController extends Controller
                 'driver' => $storageDriverKey
             ]);
             try {
+                $originFile = $file;
+                try {
+                    $file = $file->move(storage_path('app/tmp'), str_random(20) . '_' . $file->getFilename());
+                    $file = new UploadedFile($file->getRealPath(), $originFile->getClientOriginalName(), $originFile->getClientMimeType());
+                } catch (Throwable $jobEx) {
+                    Log::error($jobEx);
+                    return abort(500);
+                }
                 if ($storageDriver['driver'] !== 'local') {
-                    $storagePath = "{$user->id}/" . sha1($ufile->share_token . $ufile->created_at->getTimestamp()) . "/{$ufile->filename}";
+                    $storagePath = $ufile->getFilePath();
                     $result = $file->storePubliclyAs('', $storagePath, [
                         'disk' => $storageDriverKey ?? config('filesystems.defaultUpload'),
                         'mime-type' => $ufile->filemime,
@@ -69,15 +77,20 @@ class UploadController extends Controller
                         'disposition' => 'inline; filename=' . $ufile->filename
                     ]);
                 } else {
-                    try {
-                        $job = (new ProcessVideoThumbnail($ufile, $file))->dispatchNow();
-                    } catch(Throwable $jobEx) {
-                        Log::error($jobEx->getMessage() . "\n" . $jobEx->getTraceAsString());
-                    }
                     $result = $file->storeAs('', $ufile->share_token, $storageDriverKey ?? config('filesystems.defaultUpload'));
+                }
+                if ($file != null) {
+                    if (file_exists($file->getRealPath())) {
+                        if (preg_match('/^video/', $ufile->filemime)) {
+                            dispatch(new ProcessVideoThumbnail($ufile, $file->getRealPath()));
+                        } else {
+                            @unlink($file->getRealPath());
+                        }
+                    }
                 }
             } catch (Exception $ex) {
                 $ufile->delete();
+                Log::error($ex);
                 return abort(500);
             }
         }
@@ -96,12 +109,8 @@ class UploadController extends Controller
         ]);
         if ($v->fails()) return $v->errors();
         $file = Uploads::where('deletion_token', $deltoken)->first();
-        $fileHash = "{$file->user_id}/" . sha1($file->share_token . $file->created_at->getTimestamp()) . "/";
+        $fileHash = $file->getFilePath(false);
         $store = Storage::disk($file->driver);
-        $storageDriver = config('filesystems.disks.' . $file->driver);
-        if ($storageDriver == null || $storageDriver['driver'] == 'local') {
-            $fileHash = $file->share_token;
-        }
         if ((!$store->exists($fileHash) && $file->delete()) || $store->delete($fileHash) && $file->delete()) {
             return response()->json([
                 'message' => $file->filename . ' has been deleted'
@@ -131,6 +140,9 @@ class UploadController extends Controller
         if ($v->fails()) return $v->errors();
         $file = Uploads::where('share_token', $token)->with('user')->first();
         $file->humsize = $this->bytesToHuman($file->filesize);
+        if (!Storage::disk($file->driver)->exists($file->getFilePath)) {
+            return abort(404);
+        }
         return view('info')->with(['file' => $file]);
     }
 
@@ -172,7 +184,8 @@ class UploadController extends Controller
         $file = Uploads::where('share_token', $token)->with('user')->first();
         return view('embed')->with(['file' => $file]);
     }
-    public function showDownload() {
+    public function showDownload()
+    {
         return view('post_download');
     }
     public function getDownload(Request $req, $token)
@@ -184,7 +197,7 @@ class UploadController extends Controller
         ]);
         if ($v->fails()) return redirect()->back()->withErrors($v->errors());
         $file = Uploads::where('share_token', $token)->first();
-        $fileHash = "{$file->user_id}/" . sha1($file->share_token . $file->created_at->getTimestamp()) . "/" . $file->filename;
+        $fileHash = $file->getFilePath();
         $store = Storage::disk($file->driver);
         $fs = $store->getDriver();
         $driverConfig = config('filesystems.disks.' . $file->driver, null);
@@ -216,15 +229,12 @@ class UploadController extends Controller
         ]);
         if ($v->fails()) return $v->errors();
         $file = Uploads::where('share_token', $token)->first();
-        $fileHash = "{$file->user_id}/" . sha1($file->share_token . $file->created_at->getTimestamp()) . "/" . $file->filename;
+        $fileHash = $file->getFilePath();
         $store = Storage::disk($file->driver);
         $fs = $store->getDriver();
         $driverConfig = config('filesystems.disks.' . $file->driver, null);
         if ($driverConfig === null) {
             return abort(403);
-        }
-        if ($driverConfig['driver'] === 'local') {
-            $fileHash = $file->share_token;
         }
         if (!$store->exists($fileHash)) {
             return abort(404);

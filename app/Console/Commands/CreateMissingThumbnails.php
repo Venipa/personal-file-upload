@@ -40,12 +40,12 @@ class CreateMissingThumbnails extends Command
      */
     public function handle()
     {
-        $files = Uploads::where('filemime', 'LIKE', '%video/%')->where('thumb_token', null)->get();
-        foreach($files as $file) {
-            if($file->thumb_token != null) return;
-            $job = (new ProcessVideoThumbnail($file))->delay(5);
-            Log::debug("Processing $file->filename to create Thumbnail");
-            dispatch($job);
-        }
+        // $files = Uploads::where('filemime', 'LIKE', '%video/%')->where('thumb_token', null)->get();
+        // foreach($files as $file) {
+        //     if($file->thumb_token != null) return;
+        //     $job = (new ProcessVideoThumbnail($file))->delay(5);
+        //     Log::debug("Processing $file->filename to create Thumbnail");
+        //     dispatch($job);
+        // }
     }
 }

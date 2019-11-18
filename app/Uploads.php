@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 use Spatie\MediaLibrary\HasMedia\HasMedia;
 use Spatie\MediaLibrary\HasMedia\HasMediaTrait;
 use Spatie\MediaLibrary\Models\Media;
@@ -42,5 +43,14 @@ class Uploads extends Model implements HasMedia
     }
     public function getEmbedUrl() {
         return route('api:upload:embed', [$this->share_token, str_slug($this->filename)]);
+    }
+    public function scopegetFilePath($withFileSuffix = true) {
+        $config = config("filesystems.disks.{$this->driver}");
+        if ($config != null && $config['driver'] !== 'local') {
+            $fileHash = "{$this->user_id}/" . sha1($this->share_token . $this->created_at->getTimestamp()) . "/" . ($withFileSuffix ? $this->filename : '');
+        } else {
+            $fileHash = $this->share_token;
+        }
+        return $fileHash;
     }
 }
