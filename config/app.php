@@ -15,6 +15,7 @@ return [
 
     'name' => env('APP_NAME', 'SiteName'),
     'author' => env('APP_AUTHOR', 'Cascade#0001 / Venipa'),
+    'maxFilesize' => env('APP_MAX_FILESIZE', 100), // 100MB
 
     /*
     |--------------------------------------------------------------------------

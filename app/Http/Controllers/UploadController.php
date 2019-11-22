@@ -24,7 +24,7 @@ class UploadController extends Controller
     {
         $v = Validator::make($r->all(), [
             'key' => 'required|exists:users,apikey',
-            'file' => 'required|file|max:' . (100 * 1024)
+            'file' => 'required|file|max:' . config('app.maxFilesize') * 1024
         ]);
         if ($v->fails()) return $v->errors();
         $user = User::where('apikey', $r->input('key'))->first();
