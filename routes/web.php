@@ -13,7 +13,7 @@
 
 use Illuminate\Support\Facades\Route;
 
-Route::group(['domain' => config('app.domain')], function () {
+Route::group(['domain' => config('app.domain'), 'scheme' => ($scheme = config('app.url')) != null && strpos($scheme, 'https://') == 0 ? 'https' : 'http'], function () {
     Route::get('/', 'HomeController@index')->name('index');
 
     Route::get('/thumb/{token}', 'UploadController@getThumb')->name('api:thumb:get');
