@@ -12,8 +12,8 @@
 */
 
 use Illuminate\Support\Facades\Route;
-
-Route::group(['domain' => config('app.url')], function () {
+$baseUrl = config('app.url');
+Route::group(['domain' => $baseUrl != null ? parse_url(config('app.url'))['host'] : null], function () {
     Route::get('/', 'HomeController@index')->name('index');
 
     Route::get('/thumb/{token}', 'UploadController@getThumb')->name('api:thumb:get');
