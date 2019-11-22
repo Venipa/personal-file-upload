@@ -141,7 +141,7 @@ class UploadController extends Controller
         if ($v->fails()) return $v->errors();
         $file = Uploads::where('share_token', $token)->with('user')->first();
         $file->humsize = $this->bytesToHuman($file->filesize);
-        if (!Storage::disk($file->driver)->exists($file->getFilePath)) {
+        if (!Storage::disk($file->driver)->exists($file->getFilePath())) {
             return abort(404);
         }
         return view('info')->with(['file' => $file]);
