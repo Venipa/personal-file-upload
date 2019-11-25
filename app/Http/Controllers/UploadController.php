@@ -183,6 +183,9 @@ class UploadController extends Controller
         ]);
         if ($v->fails()) return $v->errors();
         $file = Uploads::where('share_token', $token)->with('user')->first();
+        if (!preg_match('/^(video|audio)/', $file->filemime)) {
+            return redirect()->route('api:upload:get', [$file->share_token, str_slug($file->filename, "-")]);
+        }
         return view('embed')->with(['file' => $file]);
     }
     public function showDownload()
