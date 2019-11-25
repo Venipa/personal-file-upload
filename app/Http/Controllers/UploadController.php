@@ -184,7 +184,7 @@ class UploadController extends Controller
         if ($v->fails()) return $v->errors();
         $file = Uploads::where('share_token', $token)->with('user')->first();
         if (!preg_match('/^(video|audio)/', $file->filemime)) {
-            return redirect()->route('api:upload:info', [$file->share_token, str_slug($file->filename, "-")]);
+            return abort(403, 'We only embed Audio & Video');
         }
         return view('embed')->with(['file' => $file]);
     }
