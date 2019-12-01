@@ -1,0 +1,37 @@
+@import 'button';
+@import 'card';
+@import 'input-group';
+
+* {
+  &,
+  &:before,
+  &:after {
+    outline: none !important;
+  }
+}
+.dropdown-menu {
+  box-shadow: 0 2px 5px -1px rgba($primary, 0.25),
+    0 1px 3px -1px rgba(0, 0, 0, 0.3);
+  border-width: 0;
+  border-radius: 4px;
+  flex-direction: column;
+  align-items: stretch;
+  &.show {
+    display: flex;
+  }
+}
+.dropdown-item {
+  padding: 0.25rem 0.875rem;
+  color: rgba(#000, 0.575);
+  &:hover,
+  &:focus {
+    background-color: transparent;
+    color: rgba(#000, 0.8);
+  }
+  &.active {
+    background-color: transparent;
+    color: #000;
+  }
+  line-height: 28px;
+  font-size: 0.875rem;
+}

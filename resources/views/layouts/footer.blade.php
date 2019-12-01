@@ -2,7 +2,7 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="col text-center">
-                <p class="text-muted">Made with <i class="mdi mdi-heart text-danger"></i> by <a href="https://venipa.net">Venipa</a></p>
+                <p class="text-muted">Made with <span class="text-danger">♥</span> by <a href="https://venipa.net">Venipa</a></p>
             </div>
         </div>
         @if(isset($git) && $git != null)

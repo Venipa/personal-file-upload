@@ -24,11 +24,35 @@ class UploadController extends Controller
     {
         $v = Validator::make($r->all(), [
             'key' => 'required|exists:users,apikey',
-            'file' => 'required|file|max:' . config('app.maxFilesize') * 1024
+            'file' => 'required|file'
         ]);
-        if ($v->fails()) return $v->errors();
+        if ($v->fails()) return response()->json(['errors' => $v->errors()]);
         $user = User::where('apikey', $r->input('key'))->first();
         $file = $r->file('file');
+        if (!$user->can('administrator') && !$user->can('upload.file')) {
+            $v->errors()->add('user', 'User is missing a permission to do this operation');
+            return response()->json(['errors' => $v->errors()]);
+        }
+        $roleSettings = $user->roles()->first();
+        if ($roleSettings != null) {
+            $roleSettings = $roleSettings->settings()->first();
+        }
+        if ($roleSettings != null) {
+            if ($roleSettings->maxFilesize != null && $file->getSize() > $roleSettings->maxFilesize) {
+                $v->errors()->add('file', trans('validation.lt.file', ['attribute' => 'Uploaded File', 'value' => $roleSettings->maxFilesize / 1024]));
+                return response()->json(['errors' => $v->errors()]);
+            }
+            if ($roleSettings->maxStorage != null) {
+                $currentStorageSize = $user->files()->sum('filesize') + $file->getSize();
+                if ($currentStorageSize >= $roleSettings->maxStorage) {
+                    $v->errors()->add('file', trans('validation.custom.file.storage_exceed'));
+                    return response()->json(['errors' => $v->errors()]);
+                }
+            }
+        } else if ($file->getSize() > config('app.maxFilesize')) {
+            $v->errors()->add('file', trans('validation.lt.file', ['attribute' => 'Uploaded File', 'value' => config('app.maxFilesize') / 1024]));
+            return response()->json(['errors' => $v->errors()]);
+        }
         $ufile = $user->files()->where('hash', md5_file($file->getRealPath()))->first();
         if ($ufile == null) {
             $sharetoken = str_random(10);
@@ -110,6 +134,12 @@ class UploadController extends Controller
         ]);
         if ($v->fails()) return $v->errors();
         $file = Uploads::where('deletion_token', $deltoken)->first();
+        $user = $file->user()->first();
+        if ($user->can('administrator|delete.file')) {
+            return response()->json([
+                'message' => 'This file has been locked for further inspection'
+            ]);
+        }
         $fileHash = $file->getFilePath(false);
         $store = Storage::disk($file->driver);
         if ((!$store->exists($fileHash) && $file->delete()) || $store->delete($fileHash) && $file->delete()) {
@@ -118,7 +148,7 @@ class UploadController extends Controller
             ]);
         }
         return response()->json([
-            'message' => 'file not found or the file does not exist'
+            'message' => 'File not found or the file does not exist'
         ]);
     }
     private function bytesToHuman($bytes)
@@ -142,7 +172,7 @@ class UploadController extends Controller
         $file = Uploads::where('share_token', $token)->with('user')->first();
         $file->humsize = $this->bytesToHuman($file->filesize);
         if (!Storage::disk($file->driver)->exists($file->getFilePath())) {
-            return abort(404);
+            return abort(404, 'File not Found');
         }
         return view('info')->with(['file' => $file]);
     }
@@ -186,6 +216,10 @@ class UploadController extends Controller
         if (!preg_match('/^(video|audio)/', $file->filemime)) {
             return abort(403, 'We only embed Audio & Video');
         }
+        $fileHash = $file->getFilePath();
+        if (!Storage::disk($file->driver)->exists($fileHash)) {
+            return abort(404, 'File not Found');
+        }
         return view('embed')->with(['file' => $file]);
     }
     public function showDownload()
@@ -209,7 +243,7 @@ class UploadController extends Controller
             return abort(403);
         }
         if (!$store->exists($fileHash)) {
-            return abort(404);
+            return abort(404, 'File not Found');
         }
         if ($driverConfig['driver'] !== 'local') {
             $timeout = now()->addMinutes(30);
@@ -241,7 +275,7 @@ class UploadController extends Controller
             return abort(403);
         }
         if (!$store->exists($fileHash)) {
-            return abort(404);
+            return abort(404, 'File not Found');
         }
         if ($driverConfig['driver'] !== 'local') {
             if (!preg_match('/^(video|audio|image)/', $file->filemime)) {

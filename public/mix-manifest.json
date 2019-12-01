@@ -1,4 +1,12 @@
 {
     "/js/app.js": "/js/app.js",
-    "/css/app.css": "/css/app.css"
+    "/css/app.css": "/css/app.css",
+    "/js/chunks/0.chunk.js": "/js/chunks/0.chunk.js?id=a2482db709d7d8811261",
+    "/js/chunks/1.chunk.js": "/js/chunks/1.chunk.js?id=8155fa00fc9e12fffa75",
+    "/js/chunks/3.chunk.js": "/js/chunks/3.chunk.js?id=a971a844e693931bad43",
+    "/js/chunks/5.chunk.js": "/js/chunks/5.chunk.js?id=f2303fa547ddfcbb3a04",
+    "/js/chunks/6.chunk.js": "/js/chunks/6.chunk.js?id=d8fdf3acc2c19eac512d",
+    "/js/chunks/app-dashboard-view.chunk.js": "/js/chunks/app-dashboard-view.chunk.js?id=cc5c0c675848387dbee2",
+    "/js/chunks/app-login-view.chunk.js": "/js/chunks/app-login-view.chunk.js?id=65cac95faf96237a9815",
+    "/js/chunks/file-list-view.chunk.js": "/js/chunks/file-list-view.chunk.js?id=7342088b5c4436c4b66c"
 }

@@ -12,11 +12,12 @@
     @yield('css')
 </head>
 <body>
-<div class="loading-wrapper" data-loading>
-    <div class="loading-icon"></div>
-    <div class="loading-circle"></div>
-</div>
-    @yield('body')
+    <div id="app">
+        @yield('body')
+    </div>
+    <script>
+        window.appName = "{{config('app.name')}}";
+    </script>
     <script src="{{asset('js/app.js')}}"></script>
 @yield('js')
 </body>

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\ProcessVideoThumbnail;
 use App\Uploads;
 use App\User;
 use GrahamCampbell\GitLab\Facades\GitLab;
@@ -30,8 +31,6 @@ class HomeController extends Controller
             'password' => 'required|min:5|max:30'
         ]);
         if ($v->fails()) return redirect()->back()->withErrors($v->errors());
-        $user = User::where('email', $r->input('email'))->first();
-
         if (auth()->attempt([
             'email' => $r->input('email'),
             'password' => $r->input('password')
@@ -42,10 +41,18 @@ class HomeController extends Controller
             return redirect()->back()->withErrors($v->errors());
         }
     }
+    public function dashboard() {
+        // dd(auth()->user()->withRoleSettings()->first());
+        return view('dashboard\index');
+    }
     public function files()
     {
         $user = auth()->user();
         $files = $user->files()->latest()->paginate(25);
         return view('files')->with(['user' => $user, 'files' => $files]);
+    }
+    public function logout() {
+        auth()->logout();
+        return redirect()->route('login');
     }
 }

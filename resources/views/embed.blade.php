@@ -54,16 +54,14 @@
 @endsection
 @section('body')
     @if (preg_match('/video\//', $file->filemime))
-        <script>
-            /*window.onload = function() {
-                fit($('video, audio')[0], $('.plyr')[0]);
-            };*/
-        </script>
         <style>
             .plyr {
                 width: 100%;
                 height: 100%;
                 overflow:hidden!important;
+                position: absolute;
+                top:0;
+                left:0;
             }
         </style>
         <video class="_plyr" @if($file->thumb_token != null) poster="{{$logo}}" @endif >
@@ -80,4 +78,9 @@
             <source src="{{route('api:upload:get', $file->share_token)}}" type="{{$file->filemime}}" />
         </audio>
     @endif
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            new Plyr(document.querySelector('._plyr'));
+        });
+    </script>
 @endsection

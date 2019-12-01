@@ -1,0 +1,24 @@
+.form-control {
+  box-shadow: 0 2px 5px -1px rgba($primary, 0.25),
+    0 1px 3px -1px rgba(0, 0, 0, 0.3);
+  &:active,
+  &:focus {
+    box-shadow: 0 6px 12px -2px rgba($primary, 0.45),
+      0 3px 7px -3px rgba(0, 0, 0, 0.3);
+  }
+}
+
+@each $state, $data in $form-validation-states {
+  $color: map-get($data, color);
+  @include form-validation-state($state, $color, map-get($data, icon));
+  .form-control {
+    border-width: 0;
+    @include form-validation-state-selector($state) {
+      &:focus {
+        border-color: $color;
+        box-shadow: 0 6px 12px -2px rgba($color, 0.45),
+          0 3px 7px -3px rgba($color, 0.3);
+      }
+    }
+  }
+}

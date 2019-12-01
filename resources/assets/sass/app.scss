@@ -1,149 +1,96 @@
-@import '~bootstrap-material-design/scss/bootstrap-material-design';
-@import '~@mdi/font/scss/materialdesignicons';
-@import '~tippy.js/dist/themes/light.css';
+@import 'mixins';
+@import 'variables';
+@import '~bootstrap/scss/bootstrap';
+@import '~bootstrap-vue/src/index.scss';
 @import '~plyr/src/sass/plyr';
+@import '~epic-spinners/dist/lib/epic-spinners.min.css';
+// @import '~vue-material-design-icons/styles.css';
+
+@import '~filepond/dist/filepond.min.css';
+@import 'core/base';
 .bmd-btn-icon {
-  line-height: 1.25!important;
+  line-height: 1.25 !important;
   & .mdi {
     line-height: inherit;
   }
 }
 .plyr__video-wrapper {
-  width: 100%!important;
-  height: 100%!important;
-  .plyr video, video {
-    height: 100%!important;
+  width: 100% !important;
+  height: 100% !important;
+  .plyr video,
+  video {
+    height: 100% !important;
   }
 }
-.ripple {
-  &, p, span, div, button, a, label, h1,h2,h3,h4,h5,h6 {
-    -webkit-user-select: none!important;
-    -moz-user-select: none!important;
-    -ms-user-select: none!important;
-    user-select: none!important;
-    cursor: context-menu;
-  }
-}
-html, body {
+
+html,
+body {
   height: 100%;
-}
-.no-overflow {
-  overflow: hidden;
-}
-.rounded {
-  .plyr__controls, .plyr, .plyr__video-wrapper {
-    @include border-radius($border-radius);
+  background: #f0f0f0;
+  &,
+  & > #app {
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+  #app {
+    display: flex;
+    flex-direction: column;
   }
 }
-.pos-center {
+.fill-spinner {
   position: absolute;
-  top:50%;
-  left:50%;
-  transform:translate(-50%,-50%);
-  display:block;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: #fff;
+  z-index: 999;
 }
-.sitelogo {
-  $size: 60px;
-  background-image: url("../images/logo.svg");
-  -webkit-background-size: contain;
-  background-size: contain;
-  background-repeat: no-repeat;
-  height: $size;
-  width: $size;
-  display: inline-block;
-  &.block {
-    display:block;
-  }
-  &.xl {
-    height: $size * 4;
-    width: $size * 4;
-  }
-  &.md {
-    height: $size * 2;
-    width: $size * 2;
-  }
-  &.sm {
-    height: $size * 0.75;
-    width: $size * 0.75;
+hr {
+  $hrHeight: 1px;
+  margin-top: 4px;
+  margin-bottom: 4px;
+  border: 0;
+  background-color: rgba(0, 0, 0, .1);
+  border-radius: $hrHeight;
+  height: $hrHeight;
+  // width: 100%;
+}
+.text-default {
+  color: $body-color;
+}
+a {
+  &.text-default:hover {
+    color: lighten($body-color, 5);
   }
 }
-
-.loading-wrapper {
-  position: fixed;
-  top:0;
-  left:0;
-  width: 100%;
-  height: 100%;
-  background: $body-bg;
-  z-index:999999;
-  $logo-background: darken($body-bg, 5);
-  $logo-size: 60px;
-  $logo-circle-size: $logo-size * 1.5;
-
-  .loading-circle {
+.card {
+  .card-badge {
     position: absolute;
-    top:50%;
-    left:50%;
-    height: $logo-circle-size;
-    width: $logo-circle-size;
-    border: 2px solid $logo-background;
-    background: $logo-background;
-    border-top-color: theme-color(primary);
-    -webkit-border-radius: 50%;
-    -moz-border-radius: 50%;
+    right: -8px;
+    top: -8px;
+    height: 24px;
+    width: 24px;
+    background-color: #fff;
+    line-height: 0;
     border-radius: 50%;
-    -webkit-transform: translate(-50%, -50%) rotate(0);
-    -moz-transform: translate(-50%, -50%) rotate(0);
-    -ms-transform: translate(-50%, -50%) rotate(0);
-    -o-transform: translate(-50%, -50%) rotate(0);
-    transform: translate(-50%, -50%) rotate(0);
-    animation: rotateCircle .75s ease-out infinite;
-    z-index: -1;
-  }
-  .loading-icon {
-    position: absolute;
-    top:50%;
-    left:50%;
-    -webkit-transform: translate(-50%, -50%);
-    -moz-transform: translate(-50%, -50%);
-    -ms-transform: translate(-50%, -50%);
-    -o-transform: translate(-50%, -50%);
-    transform: translate(-50%, -50%);
-    background-image: url("../images/logo.svg");
-    -webkit-background-size: contain;
-    background-size: contain;
-    background-repeat: no-repeat;
-    height: $logo-size;
-    width: $logo-size;
-  }
-  @keyframes rotateCircle {
-    from {
-      -webkit-transform: translate(-50%, -50%) rotate(0deg);
-      -moz-transform: translate(-50%, -50%) rotate(0deg);
-      -ms-transform: translate(-50%, -50%) rotate(0deg);
-      -o-transform: translate(-50%, -50%) rotate(0deg);
-      transform: translate(-50%, -50%) rotate(0deg);
+    box-shadow: 0 0 10px 0 rgba(114, 137, 218, 0.2);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    &-xl {
+      height: 32px;
+      width: 32px;
     }
-    to {
-
-      -webkit-transform: translate(-50%, -50%) rotate(360deg);
-      -moz-transform: translate(-50%, -50%) rotate(360deg);
-      -ms-transform: translate(-50%, -50%) rotate(360deg);
-      -o-transform: translate(-50%, -50%) rotate(360deg);
-      transform: translate(-50%, -50%) rotate(360deg);
-    }
-  }
-}
-.card-header {
-  .card-controls {
-    position: absolute;
-    top:50%;
-    right:0;
-    transform: translate(-50%,-50%);
-    margin-right: 10px;
-    z-index: 0;
-    &.show {
-      z-index:99999;
+    &-sm {
+      height: 20px;
+      width: 20px;
     }
   }
 }

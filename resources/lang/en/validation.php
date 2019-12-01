@@ -125,8 +125,8 @@ return [
     */
 
     'custom' => [
-        'attribute-name' => [
-            'rule-name' => 'custom-message',
+        'file' => [
+            'storage_exceed' => 'The storage size has reached its limit for your Account',
         ],
     ],
 

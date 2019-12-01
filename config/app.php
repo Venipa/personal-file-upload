@@ -15,7 +15,8 @@ return [
 
     'name' => env('APP_NAME', 'SiteName'),
     'author' => env('APP_AUTHOR', 'Cascade#0001 / Venipa'),
-    'maxFilesize' => env('APP_MAX_FILESIZE', 100), // 100MB
+    'maxFilesize' => env('APP_MAX_FILESIZE', 1024 * 1024 * 100), // 100MB
+    'maxStoragesize' => env('APP_MAX_STORAGE', 1024 * 1024 * 1024), // 1 GB
 
     /*
     |--------------------------------------------------------------------------
@@ -155,6 +156,7 @@ return [
          */
         Pbmedia\LaravelFFMpeg\FFMpegServiceProvider::class,
         Barryvdh\Debugbar\ServiceProvider::class,
+        Zizaco\Entrust\EntrustServiceProvider::class,
         /*
          * Application Service Providers...
          */
@@ -215,6 +217,7 @@ return [
         'GitLab' => GrahamCampbell\GitLab\Facades\GitLab::class,
         'FFMpeg' => Pbmedia\LaravelFFMpeg\FFMpegFacade::class,
         'Debugbar' => Barryvdh\Debugbar\Facade::class,
+        'Entrust' => Zizaco\Entrust\EntrustFacade::class,
 
     ],
 

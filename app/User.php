@@ -4,10 +4,11 @@ namespace App;
 
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Zizaco\Entrust\Traits\EntrustUserTrait;
 
 class User extends Authenticatable
 {
-    use Notifiable;
+    use Notifiable, EntrustUserTrait;
 
     /**
      * The attributes that are mass assignable.
@@ -32,6 +33,12 @@ class User extends Authenticatable
     public function links() {
         return $this->hasMany(Links::class, 'userId', 'id');
     }
+    public function regenerateSecret($uid = null) {
+        if ($uid == null) {
+            $uid = $this->getAttributeValue('id');
+        }
+        return static::query()->where('id', $uid)->update(['apikey' => str_random(28)]);
+    }
 
     /**
      * @param $apikey
@@ -39,5 +46,12 @@ class User extends Authenticatable
      */
     public function findByKey($apikey) {
         return $this->where('apikey', $apikey)->first();
+    }
+    public function scopewithRoleSettings($query) {
+        return $query->with(['roles' => function($q) {
+            $q->with(['settings' => function($q1) {
+                $q1->orderBy('id', 'asc');
+            }]);
+        }]);
     }
 }

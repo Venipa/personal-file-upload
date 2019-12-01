@@ -12,8 +12,10 @@
     @yield('css')
 </head>
 <body>
-    @yield('body')
-    <script src="{{asset('js/app.js')}}"></script>
+    <div id="_app">
+        @yield('body')
+    </div>
+    <script src="https://cdn.plyr.io/3.5.6/plyr.js"></script>
 @yield('js')
 </body>
 </html>

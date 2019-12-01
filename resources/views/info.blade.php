@@ -131,5 +131,12 @@
             </div>
         </div>
     </div>
+    @section('js')
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            new Plyr(document.querySelector('._plyr'));
+        });
+    </script>
+    @endsection
     @include('layouts.footer')
     @endsection

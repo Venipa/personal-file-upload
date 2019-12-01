@@ -52,6 +52,7 @@ class CreateUser extends Command
             'password' => Hash::make($pw),
             'apikey' => str_random(20)
         ]);
+        $user->roles()->attach(Role::where('name', 'member')->first()->id);
         if ($user == null) {
             return $this->error('Error while trying to create the user');
         }
