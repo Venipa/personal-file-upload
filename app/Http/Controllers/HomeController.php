@@ -43,7 +43,7 @@ class HomeController extends Controller
     }
     public function dashboard() {
         // dd(auth()->user()->withRoleSettings()->first());
-        return view('dashboard\index');
+        return view('dashboard.index');
     }
     public function files()
     {
