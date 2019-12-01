@@ -1,10 +1,4 @@
 {
-    "/js/chunks/0.chunk.js": "/js/chunks/0.chunk.js?id=68151d23b6936448d4a3",
-    "/js/chunks/1.chunk.js": "/js/chunks/1.chunk.js?id=203bae8bfd294086937b",
-    "/js/app.js": "/js/app.js",
-    "/css/app.css": "/css/app.css",
-    "/js/chunks/3.chunk.js": "/js/chunks/3.chunk.js?id=1be63d6352f9ab9d9d1f",
-    "/js/chunks/4.chunk.js": "/js/chunks/4.chunk.js?id=44cb403388235986d7c0",
-    "/js/chunks/5.chunk.js": "/js/chunks/5.chunk.js?id=a33b73831b6ccf4cffad",
-    "/js/chunks/6.chunk.js": "/js/chunks/6.chunk.js?id=93e146ba8455a4d218d9"
+    "/js/app.js": "/js/app.js?id=c438f544ac8fe37db934",
+    "/css/app.css": "/css/app.css?id=e56aaadfb47e9f80fd5e"
 }

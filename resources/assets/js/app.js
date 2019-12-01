@@ -13,11 +13,11 @@ window.Plyr = Plyr;
 Vue.use(BootstrapVue);
 Vue.use(Trend);
 Vue.use(vClipboard);
- 
+
 const vue = new Vue({
     components: {
-        'list-files': () => import(/* webpackChunkName: "file-list-view" */ './components/ListFilesComponent.vue'),
-        'app-login': () => import(/* webpackChunkName: "app-login-view" */ './components/Auth/LoginComponent.vue'),
-        'app-dashboard': () => import(/* webpackChunkName: "app-dashboard-view" */ './components/Dashboard/DashboardComponent.vue')
+        'list-files': require(/* webpackChunkName: "file-list-view" */ './components/ListFilesComponent.vue').default,
+        'app-login': require(/* webpackChunkName: "app-login-view" */ './components/Auth/LoginComponent.vue').default,
+        'app-dashboard': require(/* webpackChunkName: "app-dashboard-view" */ './components/Dashboard/DashboardComponent.vue').default
     }
 }).$mount('#app')

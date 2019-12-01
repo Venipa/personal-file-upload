@@ -245,8 +245,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.dashboard {
-}
 hr.fill-card {
   margin: 4px -8px;
 }
