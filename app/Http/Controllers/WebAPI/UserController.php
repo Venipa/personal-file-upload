@@ -20,9 +20,9 @@ class UserController extends Controller
         $user = auth()->user();
         $files = $user->files()->latest()->paginate(25);
         $fileSize = auth()->user()->files()->select('filesize')->sum('filesize');
-        $settings = auth()->user()->withRoleSettings()->first()->roles;
+        $settings = auth()->user()->roles()->first();
         if ($settings != null) {
-            $settings = $settings->first()->settings;
+            $settings = $settings->settings()->first();
         }
         return response()->json([
             'files' => $files, 'user' => $user, 'sizeUsed' => $fileSize,
