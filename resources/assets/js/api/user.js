@@ -20,6 +20,22 @@ export const user = {
         );
     });
   },
+  getFiles(search = null, page = 1) {
+    let data = {
+      page
+    };
+    if (search) {
+      data.q = search;
+    }
+    return new Promise((resolve, reject) => {
+      return axios.get('user/files', {
+        params: data
+      }).then(
+        x => resolve(x),
+        err => reject({ error: err, data: err?.response?.data })
+      );
+    });
+  },
   currentUser() {
     return new Promise((resolve, reject) => {
       return axios.get('user').then(

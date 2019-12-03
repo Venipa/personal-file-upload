@@ -15,12 +15,28 @@ use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
-    public function getFiles()
+    public function getFiles(Request $r)
     {
+        $val = Validator::make([
+            'q' => $r->query('q')
+        ], [
+            'q' => 'sometimes|nullable|min:2'
+        ]);
+        if ($val->fails()) {
+            return response()->json(['errors' => $val->errors()]);
+        }
         $user = auth()->user();
-        $files = $user->files()->latest()->paginate(25);
-        $fileSize = auth()->user()->files()->select('filesize')->sum('filesize');
-        $settings = auth()->user()->roles()->first();
+        $files = $user->files()->latest();
+        if (($searchQuery = $r->query('q', null)) != null) {
+            $files = $files
+                ->where('filename', 'LIKE', "%$searchQuery%")
+                ->orWhere('filetype', 'LIKE', "%$searchQuery%")
+                ->orWhere('share_token', "$searchQuery")
+                ->orWhere('id', "$searchQuery");
+        }
+        $files = $files->paginate(25);
+        $fileSize = $user->files()->select('filesize')->sum('filesize');
+        $settings = $user->roles()->first();
         if ($settings != null) {
             $settings = $settings->settings()->first();
         }

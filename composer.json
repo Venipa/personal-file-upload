@@ -16,7 +16,8 @@
         "php-http/guzzle6-adapter": "^1.1",
         "probablyrational/wasabi-storage": "^1.1",
         "ralouphie/mimey": "^2.0",
-        "spatie/laravel-medialibrary": "^7.5"
+        "spatie/laravel-medialibrary": "^7.5",
+        "symfony/translation-contracts": "^1.1.6"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.2",
