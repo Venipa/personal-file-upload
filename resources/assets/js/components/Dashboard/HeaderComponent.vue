@@ -9,31 +9,39 @@
         <h4 class="ml-2">{{ appName }}</h4>
       </a>
       <div class="flex-grow-1"></div>
-        <b-dropdown variant="link"
-                    toggle-class="btn-icon text-dark"
-                    no-caret
-                    right>
-          <template v-slot:button-content>
-            <menu-icon :size="20"></menu-icon>
-          </template>
-          <b-dropdown-item href="/account">Account</b-dropdown-item>
-          <b-dropdown-item href="/files">My Files</b-dropdown-item>
-          <b-dropdown-item href="/logout"
-                           variant="danger">Logout</b-dropdown-item>
-        </b-dropdown>
+      <b-dropdown variant="link"
+                  toggle-class="btn-icon text-dark"
+                  no-caret
+                  right>
+        <template v-slot:button-content>
+          <menu-icon :size="20"></menu-icon>
+        </template>
+        <b-dropdown-item @click="showDialog">Upload</b-dropdown-item>
+        <b-dropdown-item href="/account">Account</b-dropdown-item>
+        <b-dropdown-item href="/files">My Files</b-dropdown-item>
+        <b-dropdown-item href="/logout"
+                         variant="danger">Logout</b-dropdown-item>
+      </b-dropdown>
     </div>
-    </div>
+    <header-upload ref="upload" />
+  </div>
 </template>
 
 <script>
 import MenuIcon from "vue-material-design-icons/DotsVertical";
 export default {
   components: {
-    MenuIcon
+    MenuIcon,
+    "header-upload": () => import("../Dialogs/UploadDialogComponent")
   },
   computed: {
     appName() {
       return window.appName;
+    }
+  },
+  methods: {
+    showDialog() {
+      this.$refs.upload?.open();
     }
   }
 };
