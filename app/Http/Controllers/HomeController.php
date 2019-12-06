@@ -41,6 +41,9 @@ class HomeController extends Controller
             return redirect()->back()->withErrors($v->errors());
         }
     }
+    public function account() {
+        return view('dashboard.account')->with('user', auth()->user());
+    }
     public function dashboard() {
         // dd(auth()->user()->withRoleSettings()->first());
         return view('dashboard.index');

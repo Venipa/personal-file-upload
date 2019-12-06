@@ -31,6 +31,7 @@ Route::group(config('app.env') == 'local' ? [] : ['domain' => config('app.domain
     });
     Route::middleware(['auth', 'web'])->group(function () {
         Route::get('dashboard', 'HomeController@dashboard')->name('dashboard');
+        Route::get('account', 'HomeController@account')->name('account');
         Route::get('logout', 'HomeController@logout')->name('logout');
         Route::get('files', 'HomeController@files')->middleware('permission:access.files|administrator')->name('files');
         Route::get('links', 'ShortenerController@links')->name('links');
@@ -49,6 +50,7 @@ Route::prefix('api/v1')->name('api:v1:')->middleware(['web', 'api'])->group(func
             Route::post('gen-secret', 'WebAPI\UserController@genSecret')->name('genSecret');
             Route::post('file/delete', 'WebAPI\UserController@deleteUserFile')->name('deleteFile');
             Route::get('statistics', 'WebAPI\UserController@getStats')->name('stats');
+            Route::post('update/account', 'WebAPI\UserController@updateAccount')->name('account:update');
         });
         Route::middleware('permission:administrator|upload.file')->post('upload', 'WebAPI\UserController@upload')->name('upload');
     });

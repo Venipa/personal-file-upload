@@ -1,12 +1,7 @@
 <template>
   <div class="dashboard my-4">
     <div class="container">
-      <div class="row mb-3">
-        <div class="col d-flex flex-row justify-content-start align-items-center">
-          <img height="64" src="/images/logo.svg" alt="Logo" />
-          <h4 class="ml-2">{{ appName }}</h4>
-        </div>
-      </div>
+      <app-header class="mb-3" />
       <div class="row justify-content-between">
         <div class="col-md mb-2">
           <div class="card">
@@ -167,6 +162,7 @@ export default {
   components: {
     "atom-spinner": AtomSpinner,
     "app-spinner": PulseLoader,
+    "app-header": () => import('./HeaderComponent'),
     DownloadIcon,
     UploadIcon,
     ViewIcon,

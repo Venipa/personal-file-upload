@@ -1,17 +1,7 @@
 <template>
   <div class="list-file-wrapper">
     <div class="container d-flex flex-column my-3">
-      <div class="row mb-3">
-        <div class="col d-flex flex-row justify-content-start align-items-center">
-          <img height="64"
-               src="/images/logo.svg"
-               alt="Logo" />
-          <a href="/dashboard/"
-             class="text-dark text-decoration-none">
-            <h4 class="ml-2">{{ appName }}</h4>
-          </a>
-        </div>
-      </div>
+      <app-header class="mb-3" />
       <div class="row mb-3"
            v-if="message">
         <div class="col d-flex flex-column">
@@ -151,6 +141,7 @@ const defaultData = () => {
 export default {
   components: {
     "atom-spinner": AtomSpinner,
+    "app-header": () => import('./Dashboard/HeaderComponent'),
     UploadDialogComponent,
     VertMoreIcon
   },

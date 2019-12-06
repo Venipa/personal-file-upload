@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('body')
-    <div class="container">
+    <div class="container d-flex flex-column flex-fill justify-content-center">
         <div class="row justify-content-center">
             <div class="text-center pos-center ripple p-2 rounded">
                 <div class="sitelogo md"></div>

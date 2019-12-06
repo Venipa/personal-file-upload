@@ -201,4 +201,13 @@ class UserController extends Controller
             'info_url' => route('api:upload:info', [$ufile->share_token, str_slug($ufile->filename, "-")])
         ]);
     }
+    public function updateAccount(Request $r) {
+        $v = Validator::make($r->all(), [
+            'email' => 'sometimes|unique:users,email',
+            'password' => 'sometimes|confirmed|min:5'
+        ]);
+        if ($v->fails()) return response()->json(['errors' => $v->errors()], 403);
+        $v->errors()->add('account', 'Not implemented yet');
+        return response()->json(['errors' => $v->errors()], 403);
+    }
 }

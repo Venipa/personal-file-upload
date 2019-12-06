@@ -79,5 +79,21 @@ export const user = {
         err => reject({ error: err, data: err?.response?.data })
       );
     });
+  },
+  /**
+   * 
+   * @param {{email: string, password: string, confirm_password: string}} user 
+   */
+  updateAccount: function(user) {
+    return new Promise((resolve, reject) => {
+      return axios.post('user/update/account', {
+        email: user.email,
+        password: user.password || undefined,
+        password_confirmation: user.confirm_password || undefined
+      }).then(
+        x => resolve(x),
+        err => reject({ error: err, data: err?.response?.data })
+      );
+    })
   }
 };
