@@ -106,12 +106,12 @@ class RemoteDownloadJob implements ShouldQueue
                 'share_token' => $sharetoken,
                 'deletion_token' => $deletiontoken,
                 'filename' => $file->getClientOriginalName(),
-                'filemime' => $mimey->getAllMimeTypes($file->getClientOriginalExtension()),
+                'filemime' => $mimey->getMimeType($file->getClientOriginalExtension()),
                 'filetype' => $file->getClientOriginalExtension(),
                 'filesize' => $file->getSize(),
                 'user_id' => $this->userId,
                 'hash' => $md5File,
-                'driver' => $storageDriverKey
+                'driver' => $storageDriverKey ?? config('filesystems.defaultUpload')
             ]);
         }
 

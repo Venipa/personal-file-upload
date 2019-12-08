@@ -61,3 +61,4 @@ Route::prefix('api/v1')->name('api:v1:')->middleware(['web', 'api'])->group(func
         Route::post('login', 'WebAPI\AuthController@login')->name('login');
     });
 });
+

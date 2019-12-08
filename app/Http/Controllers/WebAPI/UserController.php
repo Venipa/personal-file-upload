@@ -11,9 +11,11 @@ use Exception;
 use Illuminate\Filesystem\Cache;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Queue;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use Throwable;
 
 class UserController extends Controller
 {
