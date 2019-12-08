@@ -93,16 +93,9 @@ class RemoteDownloadJob implements ShouldQueue
         if ($settings != null) {
             $settings = $settings->settings()->first();
         }
-        $dynamic = $settings->maxFilesize != null ? ['max:'. $settings->maxFilesize] : [];
-        $v = validator([
-            'file' => $file
-        ],
-        [
-            'file' => array_replace_recursive(['required'], $dynamic)
-        ]);
-        if ($v->fails()) {
+        if ($settings->maxFilesize != null && $file->getSize() > $settings->maxFilesize) {
             @unlink($file->getRealPath());
-            throw new Exception($v->errors()->first("file"));
+            throw new Exception('The file could not be uploaded due to its filesize, you\'re restricted to: ' . $settings->maxFilesize);
             return;
         }
         $md5File = md5_file($file->getRealPath());
