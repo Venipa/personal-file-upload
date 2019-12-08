@@ -60,7 +60,6 @@ class RemoteDownloadJob implements ShouldQueue
         $tmpFilename = str_random(40);
         $tmpFilepath = config('filesystems.disks.remote.root') . '/' . $tmpFilename;
         $originFilename = parse_url($this->url);
-        $fileExtension = pathinfo($originFilename['path'])['extension'];
         $originFilename = $originFilename['scheme'] . '://' . $originFilename['host'] . $originFilename['path'];
         $curl
             ->setCurlOptions([
