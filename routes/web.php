@@ -53,6 +53,8 @@ Route::prefix('api/v1')->name('api:v1:')->middleware(['web', 'api'])->group(func
             Route::post('update/account', 'WebAPI\UserController@updateAccount')->name('account:update');
         });
         Route::middleware('permission:administrator|upload.file')->post('upload', 'WebAPI\UserController@upload')->name('upload');
+        Route::middleware('permission:administrator')->post('remote', 'WebAPI\UserController@addRemoteDownload')->name('remote-upload');
+        Route::middleware('permission:administrator')->get('remote/status', 'WebAPI\UserController@remoteDownloadStatus')->name('remote-status');
     });
     Route::prefix('auth')->middleware('auth')->name('auth:')->post('logout', 'WebAPI\AuthController@logout')->name('logout');
     Route::prefix('auth')->name('auth:')->middleware('guest')->group(function() {

@@ -6,7 +6,7 @@ export const user = {
    * @param {string} username
    * @param {string} password
    */
-  login: function(username, password, remember = false) {
+  login(username, password, remember = false) {
     return new Promise((resolve, reject) => {
       return axios
         .post('auth/login', {
@@ -52,7 +52,7 @@ export const user = {
       );
     });
   },
-  statistics: function() {
+  statistics() {
     return new Promise((resolve, reject) => {
       return axios.get('user/statistics').then(
         x => resolve(x),
@@ -60,7 +60,7 @@ export const user = {
       );
     });
   },
-  deleteFile: function(token) {
+  deleteFile(token) {
     return new Promise((resolve, reject) => {
       return axios.post('user/file/delete', {
         token
@@ -70,7 +70,7 @@ export const user = {
       );
     });
   },
-  uploadFile: function(file) {
+  uploadFile(file) {
     const fd = new FormData();
     fd.append('file', file);
     return new Promise((resolve, reject) => {
@@ -84,7 +84,7 @@ export const user = {
    * 
    * @param {{email: string, password: string, confirm_password: string}} user 
    */
-  updateAccount: function(user) {
+  updateAccount(user) {
     return new Promise((resolve, reject) => {
       return axios.post('user/update/account', {
         email: user.email,
@@ -95,5 +95,27 @@ export const user = {
         err => reject({ error: err, data: err?.response?.data })
       );
     })
+  },
+  remoteDownload(url) {
+    return new Promise((resolve, reject) => {
+      return axios.post('remote', {
+        url
+      }).then(
+        x => resolve(x),
+        err => reject({ error: err, data: err?.response?.data })
+      );
+    });
+  },
+  remoteStatus(jobId) {
+    return new Promise((resolve, reject) => {
+      return axios.get('remote/status', {
+        params: {
+          jobId
+        }
+      }).then(
+        x => resolve(x),
+        err => reject({ error: err, data: err?.response?.data })
+      );
+    });
   }
 };

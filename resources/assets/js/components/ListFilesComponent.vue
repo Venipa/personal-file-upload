@@ -183,6 +183,14 @@ export default {
         path.indexOf("/") === 0 ? path.substring(1) : path
       }`;
     },
+    showToast(title, msg, type = "danger") {
+      this.$bvToast.toast(msg, {
+        title: title,
+        variant: type || "default",
+        autoHideDelay: 5000,
+        appendToast: true
+      });
+    },
     copyLink(item) {
       this.$clipboard(this.route(`/f/${item.share_token}`));
     },

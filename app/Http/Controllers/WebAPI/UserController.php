@@ -5,11 +5,13 @@ namespace App\Http\Controllers\WebAPI;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Jobs\ProcessVideoThumbnail;
+use App\Jobs\RemoteDownloadJob;
 use App\Uploads;
 use Exception;
 use Illuminate\Filesystem\Cache;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Queue;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
@@ -161,6 +163,8 @@ class UserController extends Controller
                     $file = new UploadedFile($file->getRealPath(), $originFile->getClientOriginalName(), $originFile->getClientMimeType());
                 } catch (Throwable $jobEx) {
                     Log::error($jobEx);
+                    @unlink($file->getRealPath());
+                    @$ufile->delete();
                     return abort(500);
                 }
                 if ($storageDriver['driver'] !== 'local') {
@@ -209,5 +213,32 @@ class UserController extends Controller
         if ($v->fails()) return response()->json(['errors' => $v->errors()], 403);
         $v->errors()->add('account', 'Not implemented yet');
         return response()->json(['errors' => $v->errors()], 403);
+    }
+    public function addRemoteDownload(Request $r) {
+        $v = Validator::make($r->all(), [
+            'url' => ['required']
+        ]);
+        $user = auth()->user();
+        if (!$user->can('administrator')) {
+            $v->errors()->add('user', 'User is not authenticated to use this feature yet.');
+        }
+        if ($v->fails()) return response()->json(['errors' => $v->errors()], 403);
+        $job = new RemoteDownloadJob($user->id, $r->input('url'), preg_match('/magnet:\?xt=urn:[a-z0-9]{20,50}/i', $r->input('url')) != false);
+        $pendingJob = $this->dispatch($job);
+        return response()->json([
+            'jobId' => $pendingJob
+        ]);
+    }
+    public function remoteDownloadStatus(Request $r) {
+        $v = Validator::make($r->all(), [
+            'jobId' => ['required', 'integer']
+        ]);
+        if ($v->fails()) return response()->json(['errors' => $v->errors()], 403);
+        $job = DB::table('jobs')->where('id', $r->input('jobId'))->first();
+        if ($job != null) {
+            $jobData = json_decode($job->payload);
+            $jobData = unserialize($jobData->data->command);
+        }
+        return response()->json(['job_done' => $job == null]);
     }
 }

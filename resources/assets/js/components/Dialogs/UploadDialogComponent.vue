@@ -38,6 +38,28 @@
                      @init="handleFilePondInit" />
         </div>
       </b-tab>
+      <b-tab title="Remote">
+        <form action=""
+              @submit.stop.prevent="onRemoteDownload">
+          <b-form-group>
+            <b-form-input type="text"
+                          v-model="remoteUrlInput"
+                          required />
+          </b-form-group>
+
+          <b-button class="d-flex flex-row"
+                    variant="dark"
+                    type="submit"
+                    :disabled="isLoading">
+            <span>Download</span>
+            <app-spinner v-if="isLoading"
+                         class="ml-2"
+                         :size="8"
+                         sizeUnit="px"
+                         color="#ffffff" />
+          </b-button>
+        </form>
+      </b-tab>
       <b-tab v-if="pond.createdFiles && pond.createdFiles.length > 0"
              title="Uploaded Files">
         <div class="mb-4 mx-2 d-flex flex-row justify-content-end">
@@ -78,11 +100,13 @@ import { PulseLoader } from "@saeris/vue-spinners";
 import { axios } from "../../app";
 import { user } from "../../api";
 import fileSize from "filesize";
+import { ErrorBag } from "../../helpers";
 const FilePond = vueFilePond();
 
 const defaultOptions = () => {
   return {
     showRaw: false,
+    remoteUrlInput: null,
     dropzoneOptions: {
       url: window.location.origin + `/api/v1/upload`,
       headers: axios.defaults.headers,
@@ -163,6 +187,68 @@ export default {
     },
     handleFilePondInit(ev) {
       console.log(ev);
+    },
+    remoteStatusCheck(jobId) {
+      const waitCirculations = 1000;
+      let currentCirculations = 0;
+      const statusCheck = () => {
+        return new Promise((resolve, reject) => {
+          return user.remoteStatus(jobId).then(x => {
+            if (x.data?.job_done) {
+              return resolve(x.data?.job_done);
+            } else {
+              if (currentCirculations > waitCirculations) {
+                return reject();
+              }
+              currentCirculations++;
+              setTimeout(() => {
+                statusCheck().then(d => resolve(d));
+              }, 1000);
+            }
+          });
+        })
+      };
+      return new Promise((resolve, reject) => {
+        statusCheck().then(x => {
+          console.log("statuscheck: ", x);
+          if (x) {
+            resolve(x);
+          }
+        });
+      });
+    },
+    onRemoteDownload() {
+      const url = this.remoteUrlInput;
+      this.isLoading = true;
+      user
+        .remoteDownload(url)
+        .then(x => {
+          if (x.data.jobId) {
+            this.remoteStatusCheck(x.data.jobId)
+              .then(x => {
+                this.isLoading = false;
+              })
+              .catch(() => {
+                this.isLoading = false;
+              });
+          }
+        })
+        .catch(({ error, data }) => {
+          if (data?.errors) {
+            this.showToast(
+              "Error",
+              ErrorBag.getFirstError(data.errors),
+              "danger"
+            );
+          } else {
+            this.showToast(
+              "Error",
+              ErrorBag.getResponseErrorString(error),
+              "danger"
+            );
+          }
+          this.isLoading = false;
+        });
     },
     onReloadAll() {
       if (
