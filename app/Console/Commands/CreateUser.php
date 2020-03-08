@@ -2,10 +2,10 @@
 
 namespace App\Console\Commands;
 
+use App\Role;
 use App\User;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Hash;
-use phpDocumentor\Reflection\Types\This;
 
 class CreateUser extends Command
 {
