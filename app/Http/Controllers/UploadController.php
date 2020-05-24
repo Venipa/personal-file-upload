@@ -247,13 +247,7 @@ class UploadController extends Controller
         }
         if ($driverConfig['driver'] !== 'local') {
             $timeout = now()->addMinutes(30);
-            $fileUrl = $store->temporaryUrl($fileHash, $timeout);
-            if ($driverConfig['alias'] != null) {
-                $fileQuery = parse_url($fileUrl);
-                $fileUrl = $driverConfig['alias']
-                    . $fileQuery['path'] . '?'
-                    . $fileQuery['query'];
-            }
+            $fileUrl = $this->parseFileUrl($driverConfig, $store->temporaryUrl($fileHash, $timeout));
             return redirect()->route('post:download')->with(['file' => $file, 'tempUrl' => $fileUrl, 'expireAt' => $timeout]);
         }
         $stream = $fs->readStream();
@@ -265,7 +259,7 @@ class UploadController extends Controller
             'Content-Disposition' => 'attachment; ' . $file->filename
         ]);
     }
-    private function parseFileUrl($driver, $fileUrl)
+    private function parseFileUrl($driverConfig, $fileUrl)
     {
         if ($driverConfig['alias'] != null) {
             $fileQuery = parse_url($fileUrl);
