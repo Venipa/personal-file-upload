@@ -261,7 +261,7 @@ class UploadController extends Controller
     }
     private function parseFileUrl($driverConfig, $fileUrl)
     {
-        if ($driverConfig['alias'] != null) {
+        if (isset($driverConfig['alias']) && $driverConfig['alias'] != null) {
             $fileQuery = parse_url($fileUrl);
             $fileUrl = $driverConfig['alias']
                 . $fileQuery['path'] . '?'
