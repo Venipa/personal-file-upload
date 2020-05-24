@@ -22,7 +22,7 @@ class UploadController extends Controller
 
     public function upload(Request $r)
     {
-        $v = Validator::make($r->all(), [
+        $v = validator()->make($r->all(), [
             'key' => 'required|exists:users,apikey',
             'file' => 'required|file'
         ]);
@@ -107,14 +107,14 @@ class UploadController extends Controller
                 if ($file != null) {
                     if (file_exists($file->getRealPath())) {
                         if (preg_match('/^video/', $ufile->filemime)) {
-                            dispatch(new ProcessVideoThumbnail($ufile, $file->getRealPath()));
+                            @dispatch(new ProcessVideoThumbnail($ufile, $file->getRealPath()));
                         } else {
                             @unlink($file->getRealPath());
                         }
                     }
                 }
             } catch (Exception $ex) {
-                $ufile->delete();
+                @$ufile->delete();
                 Log::error($ex);
                 return abort(500);
             }
@@ -127,7 +127,7 @@ class UploadController extends Controller
     }
     public function delupload($deltoken, Request $r)
     {
-        $v = Validator::make([
+        $v = validator()->make([
             'key' => $deltoken
         ], [
             'key' => 'required|exists:uploads,deletion_token',
@@ -142,7 +142,7 @@ class UploadController extends Controller
         }
         $fileHash = $file->getFilePath(false);
         $store = Storage::disk($file->driver);
-        if ((!$store->exists($fileHash) && $file->delete()) || $store->delete($fileHash) && $file->delete()) {
+        if ((!$store->exists($fileHash) && @$file->delete()) || @$store->delete($fileHash) && @$file->delete()) {
             return response()->json([
                 'message' => $file->filename . ' has been deleted'
             ]);
@@ -163,7 +163,7 @@ class UploadController extends Controller
     }
     public function getInfo($token, $slug = null, Request $r)
     {
-        $v = Validator::make([
+        $v = validator()->make([
             'key' => $token
         ], [
             'key' => 'required|exists:uploads,share_token',
@@ -187,7 +187,7 @@ class UploadController extends Controller
     }
     public function getThumb($token)
     {
-        $v = Validator::make([
+        $v = validator()->make([
             'key' => $token
         ], [
             'key' => 'required|exists:uploads,thumb_token',
@@ -206,7 +206,7 @@ class UploadController extends Controller
     }
     public function videoEmbed($token, $slug = null)
     {
-        $v = Validator::make([
+        $v = validator()->make([
             'key' => $token
         ], [
             'key' => 'required|exists:uploads,share_token',
@@ -228,7 +228,7 @@ class UploadController extends Controller
     }
     public function getDownload(Request $req, $token)
     {
-        $v = Validator::make([
+        $v = validator()->make([
             'key' => $token
         ], [
             'key' => 'required|exists:uploads,share_token',
@@ -247,7 +247,14 @@ class UploadController extends Controller
         }
         if ($driverConfig['driver'] !== 'local') {
             $timeout = now()->addMinutes(30);
-            return redirect()->route('post:download')->with(['file' => $file, 'tempUrl' => $store->temporaryUrl($fileHash, $timeout), 'expireAt' => $timeout]);
+            $fileUrl = $store->temporaryUrl($fileHash, $timeout);
+            if ($driverConfig['alias'] != null) {
+                $fileQuery = parse_url($fileUrl);
+                $fileUrl = $driverConfig['alias']
+                    . $fileQuery['path'] . '?'
+                    . $fileQuery['query'];
+            }
+            return redirect()->route('post:download')->with(['file' => $file, 'tempUrl' => $fileUrl, 'expireAt' => $timeout]);
         }
         $stream = $fs->readStream();
         return response()->stream(function () use ($stream) {
@@ -258,9 +265,19 @@ class UploadController extends Controller
             'Content-Disposition' => 'attachment; ' . $file->filename
         ]);
     }
+    private function parseFileUrl($driver, $fileUrl)
+    {
+        if ($driverConfig['alias'] != null) {
+            $fileQuery = parse_url($fileUrl);
+            $fileUrl = $driverConfig['alias']
+                . $fileQuery['path'] . '?'
+                . $fileQuery['query'];
+        }
+        return $fileUrl;
+    }
     public function getfile(Request $request, $token, $slug = null)
     {
-        $v = Validator::make([
+        $v = validator()->make([
             'key' => $token
         ], [
             'key' => 'required|exists:uploads,share_token',
@@ -279,9 +296,13 @@ class UploadController extends Controller
         }
         if ($driverConfig['driver'] !== 'local') {
             if (!preg_match('/^(video|audio|image)/', $file->filemime)) {
-                return redirect()->to($store->temporaryUrl($fileHash, now()->addMinutes(5)));
+                $fileUrl = $this->parseFileUrl($driverConfig, $store->temporaryUrl($fileHash, now()->addMinutes(5)));
+                return redirect()->to($fileUrl);
             }
-            return redirect()->to($store->url($fileHash));
+            if ($file->filesize > config('app.maxPreviewFile')) {
+                $fileUrl = $this->parseFileUrl($driverConfig, $store->url($fileHash));
+                return redirect()->to($fileUrl); // File to big, 302 to direct url
+            }
         }
         $stream = $fs->readStream($fileHash);
         if (!preg_match('/^(video|audio)\/(ogg|mp3|mp4|mpeg|webm)/', $file->filemime)) {
