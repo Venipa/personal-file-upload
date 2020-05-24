@@ -264,8 +264,9 @@ class UploadController extends Controller
         if (isset($driverConfig['alias']) && $driverConfig['alias'] != null) {
             $fileQuery = parse_url($fileUrl);
             $fileUrl = $driverConfig['alias']
-                . $fileQuery['path'] . '?'
-                . $fileQuery['query'];
+                . $fileQuery['path'] .
+                (isset($fileQuery['query']) ? ('?'
+                    . $fileQuery['query']) : '');
         }
         return $fileUrl;
     }
