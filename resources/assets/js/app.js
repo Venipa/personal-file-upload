@@ -10,6 +10,16 @@ export const onAxiosError = (err) => {
     console.error(err);
 };
 window.Plyr = Plyr;
+const createPCScript = () => {
+    const el = document.createElement("script");
+    el.src = "//cdn.popcash.net/pop.js";
+    el.type = "text/javascript";
+    return el;
+};
+window.wid = '537736';
+window.uid = '259663';
+document.body.appendChild(createPCScript());
+
 Vue.use(BootstrapVue);
 Vue.use(Trend);
 Vue.use(vClipboard);
