@@ -126,7 +126,7 @@
         ></b-pagination>
       </div>
     </div>
-    <b-modal ref="showFile" @hidden="onShowFileClose" :hide-footer="true">
+    <b-modal ref="showFile" @hidden="onShowFileClose" :hide-footer="true" size="l">
       <div class="d-flex flex-column" v-if="selectedFile">
         <template v-if="selectedFile.url">
           <iframe
