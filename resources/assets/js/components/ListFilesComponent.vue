@@ -136,7 +136,7 @@
             frameborder="0"
           ></iframe>
           <img
-            class="img-fluid"
+            class="img-fluid" style="margin: 0 auto"
             v-else-if="selectedFile.type === 'image'"
             :src="selectedFile.url"
             :alt="selectedFile.filename"
