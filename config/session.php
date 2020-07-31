@@ -44,7 +44,7 @@ return [
     |
     */
 
-    'encrypt' => false,
+    'encrypt' => env('APP_ENV') == 'production' ? true : false,
 
     /*
     |--------------------------------------------------------------------------
