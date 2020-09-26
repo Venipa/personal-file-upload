@@ -7,7 +7,9 @@ use App\Http\Controllers\Controller;
 use App\Jobs\ProcessVideoThumbnail;
 use App\Jobs\RemoteDownloadJob;
 use App\Uploads;
+use App\User;
 use Exception;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Filesystem\Cache;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
@@ -29,16 +31,16 @@ class UserController extends Controller
         if ($val->fails()) {
             return response()->json(['errors' => $val->errors()]);
         }
+        /** @var User */
         $user = auth()->user();
-        $files = $user->files()->latest();
-        if (($searchQuery = $r->query('q', null)) != null) {
-            $files = $files
-                ->where('filename', 'LIKE', "%$searchQuery%")
+        $files = $user->files()->latest()->when(($searchQuery = $r->query('q', null)) != null, function (Builder $q) use ($searchQuery) {
+            $q->where(function(Builder $qw) use($searchQuery) {
+                $qw->where('filename', 'LIKE', "%$searchQuery%")
                 ->orWhere('filetype', 'LIKE', "%$searchQuery%")
                 ->orWhere('share_token', "$searchQuery")
                 ->orWhere('id', "$searchQuery");
-        }
-        $files = $files->paginate(25);
+            });
+        })->paginate(25);
         $fileSize = $user->files()->select('filesize')->sum('filesize');
         $settings = $user->roles()->first();
         if ($settings != null) {
@@ -56,14 +58,13 @@ class UserController extends Controller
         $linkCount = auth()->user()->links()->count();
         $fileTypeCount = auth()->user()->files()->groupBy('filemime')->select('filemime', DB::raw('count(filemime) as total'))->get();
         $fileTypeCountArray = [];
-        foreach($fileTypeCount as $stat) {
+        foreach ($fileTypeCount as $stat) {
             $key = explode('/', $stat->filemime)[0];
             if (isset($fileTypeCountArray[$key]) && $fileTypeCountArray[$key] != null) {
                 $fileTypeCountArray[$key] += $stat->total;
             } else {
                 $fileTypeCountArray[$key] = $stat->total;
             }
-
         }
         return response()->json([
             'statistics' => [
@@ -74,16 +75,19 @@ class UserController extends Controller
             ]
         ]);
     }
-    public function genSecret() {
+    public function genSecret()
+    {
         $user = auth()->user();
         $user->apikey = str_random(28);
         $user->save();
         return response()->json(['key' => $user->apikey]);
     }
-    public function getUser() {
+    public function getUser()
+    {
         return response()->json(['user' => auth()->user()]);
     }
-    public function deleteUserFile(Request $r) {
+    public function deleteUserFile(Request $r)
+    {
         $v = Validator::make($r->all(), [
             'token' => 'required|exists:uploads,share_token,user_id,' . auth()->id(),
         ]);
@@ -105,8 +109,9 @@ class UserController extends Controller
         }
         return response()->json(['errors' => $v->errors()], 403);
     }
-    public function upload(Request $r) {
-        
+    public function upload(Request $r)
+    {
+
         $v = Validator::make($r->all(), [
             'file' => 'required|file'
         ]);
@@ -207,7 +212,8 @@ class UserController extends Controller
             'info_url' => route('api:upload:info', [$ufile->share_token, str_slug($ufile->filename, "-")])
         ]);
     }
-    public function updateAccount(Request $r) {
+    public function updateAccount(Request $r)
+    {
         $v = Validator::make($r->all(), [
             'email' => 'sometimes|unique:users,email',
             'password' => 'sometimes|confirmed|min:5'
@@ -216,7 +222,8 @@ class UserController extends Controller
         $v->errors()->add('account', 'Not implemented yet');
         return response()->json(['errors' => $v->errors()], 403);
     }
-    public function addRemoteDownload(Request $r) {
+    public function addRemoteDownload(Request $r)
+    {
         $v = Validator::make($r->all(), [
             'url' => ['required']
         ]);
@@ -231,7 +238,8 @@ class UserController extends Controller
             'jobId' => $pendingJob
         ]);
     }
-    public function remoteDownloadStatus(Request $r) {
+    public function remoteDownloadStatus(Request $r)
+    {
         $v = Validator::make($r->all(), [
             'jobId' => ['required', 'integer']
         ]);

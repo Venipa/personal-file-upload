@@ -86,6 +86,7 @@ return [
             'region' => env('WASABI_TEST_DEFAULT_REGION', 'eu-central-1'),
             'bucket' => env('WASABI_TEST_BUCKET'),
             'root' => env('WASABI_TEST_ROOT', '/'),
+            'alias' => 'cdnvm1.mavis.moe'
         ],
         'cdn:prod' => [
             'driver' => 'wasabi',
@@ -94,6 +95,7 @@ return [
             'region' => env('WASABI_DEFAULT_REGION', 'eu-central-1'),
             'bucket' => env('WASABI_BUCKET'),
             'root' => env('WASABI_ROOT', '/'),
+            'alias' => 'https://cdnvm1.mavis.moe'
         ]
 
     ],

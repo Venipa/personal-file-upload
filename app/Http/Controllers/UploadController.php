@@ -8,6 +8,7 @@ use App\Uploads;
 use App\User;
 use App\VideoStream;
 use Exception;
+use Illuminate\Filesystem\FilesystemAdapter;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\File;
@@ -280,6 +281,9 @@ class UploadController extends Controller
         if ($v->fails()) return $v->errors();
         $file = Uploads::where('share_token', $token)->first();
         $fileHash = $file->getFilePath();
+        /** 
+         * @var \Illuminate\Filesystem\FilesystemAdapter $store
+         */
         $store = Storage::disk($file->driver);
         $fs = $store->getDriver();
         $driverConfig = config('filesystems.disks.' . $file->driver, null);
