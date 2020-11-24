@@ -15,7 +15,7 @@
     <div id="_app">
         @yield('body')
     </div>
-    <script src="https://cdn.plyr.io/3.5.6/plyr.js"></script>
+    <script src="https://cdn.plyr.io/3.6.3/plyr.js"></script>
 @yield('js')
 </body>
 </html>
