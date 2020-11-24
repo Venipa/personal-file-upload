@@ -9,7 +9,7 @@ use App\Jobs\RemoteDownloadJob;
 use App\Uploads;
 use App\User;
 use Exception;
-use Illuminate\Database\Query\Builder;
+use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Filesystem\Cache;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
@@ -33,12 +33,12 @@ class UserController extends Controller
         }
         /** @var User */
         $user = auth()->user();
-        $files = $user->files()->latest()->when(($searchQuery = $r->query('q', null)) != null, function (Builder $q) use ($searchQuery) {
-            $q->where(function(Builder $qw) use($searchQuery) {
+        $files = $user->files()->latest()->when($r->query('q', false), function (EloquentBuilder $q, $searchQuery) {
+            return $q->where(function(EloquentBuilder $qw) use($searchQuery) {
                 $qw->where('filename', 'LIKE', "%$searchQuery%")
                 ->orWhere('filetype', 'LIKE', "%$searchQuery%")
-                ->orWhere('share_token', "$searchQuery")
-                ->orWhere('id', "$searchQuery");
+                ->orWhere('share_token', '=', "$searchQuery")
+                ->orWhere('id', '=', "$searchQuery");
             });
         })->paginate(25);
         $fileSize = $user->files()->select('filesize')->sum('filesize');
