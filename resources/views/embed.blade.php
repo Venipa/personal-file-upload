@@ -70,8 +70,8 @@
     @elseif (preg_match('/audio\//', $file->filemime))
     @section('css')
     <style>
-      body {
-        background-color: #fff;
+      html, body {
+        background-color: transparent;
       }
       #_app {
         display: flex;
