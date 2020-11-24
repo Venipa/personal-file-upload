@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Filesystem\Cache;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Queue;
 use Illuminate\Support\Facades\Storage;
@@ -215,12 +216,17 @@ class UserController extends Controller
     public function updateAccount(Request $r)
     {
         $v = Validator::make($r->all(), [
-            'email' => 'sometimes|unique:users,email',
-            'password' => 'sometimes|confirmed|min:5'
+            'password' => 'required|confirmed|min:5'
         ]);
         if ($v->fails()) return response()->json(['errors' => $v->errors()], 403);
-        $v->errors()->add('account', 'Not implemented yet');
-        return response()->json(['errors' => $v->errors()], 403);
+        $user = auth()->user();
+        if (Hash::check($r->input('password'), $user->password)) {
+          $v->errors()->add('account', 'Password must differ.');
+          return response()->json(['errors' => $v->errors()], 403);
+        }
+        $user->password = Hash::make($r->input('password'));
+        $user->save();
+        return response()->json(['message' => 'Password has been updated'], 200);
     }
     public function addRemoteDownload(Request $r)
     {

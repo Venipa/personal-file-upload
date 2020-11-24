@@ -21,7 +21,7 @@
                 <b-form-input id="mail-input-1"
                               v-model="email"
                               :state="email && emailState"
-                              :disabled="isSaving"
+                              :disabled="true"
                               trim></b-form-input>
               </b-form-group>
 
@@ -35,6 +35,7 @@
                               v-model="password"
                               :state="password && passwordState"
                               :disabled="isSaving"
+                              type="password"
                               trim></b-form-input>
               </b-form-group>
 
@@ -48,6 +49,7 @@
                               v-model="confirm_password"
                               :state="confirm_password && passwordState"
                               :disabled="isSaving"
+                              type="password"
                               trim></b-form-input>
               </b-form-group>
               <div class="d-flex flex-row justify-content-end">
@@ -159,6 +161,7 @@ export default {
           );
         })
         .catch(({ error, data }) => {
+          this.isSaving = false;
           if (data?.errors) {
             this.showToast(
               "Error",

@@ -83,9 +83,11 @@
                 <div
                   class="mr-1 btn-showFile"
                   style="flex: 0 0 100px"
-                  @click="openShowFile(item)"
+                  @click="() => openShowFile(item)"
+                  v-b-tooltip.hover.left="'Preview File'"
                 >
                   {{ item.share_token }}
+                  
                 </div>
                 <div
                   class="d-flex flex-row justify-content-center align-items-center"
@@ -145,6 +147,8 @@
         </template>
         <span class="text-muted" v-else>Unable to display file</span>
         <div class="mt-3 d-flex justify-content-end">
+          <b-button variant="dark" class="mr-1" @click="() => copyEmbedLink(selectedFile)">Copy Embed Link</b-button>
+          <b-button variant="dark" class="mr-1" @click="() => copyLink(selectedFile)">Copy direct Link</b-button>
           <b-button variant="primary" @click="closeShowFile">Close</b-button>
         </div>
       </div>
@@ -206,6 +210,9 @@ export default {
     openUploadDialog() {
       this.$refs["uploadDialog"].open();
     },
+    copyEmbedLink(item) {
+      if (this.$clipboard(this.route(`/embed/${item.share_token}`))) this.showToast('Copied Embed Link', `File: ${item.filename}`);
+    },
     setSuccess(str) {
       this.message = {
         content: str,
@@ -235,7 +242,7 @@ export default {
       });
     },
     copyLink(item) {
-      this.$clipboard(this.route(`/f/${item.share_token}`));
+      if (this.$clipboard(this.route(`/f/${item.share_token}`))) this.showToast('Copied direct Link', `File: ${item.filename}`);
     },
     download(item) {
       openLink(this.route(`/i/${item.share_token}`), {
