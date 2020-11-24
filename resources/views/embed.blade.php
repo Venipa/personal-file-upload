@@ -68,12 +68,23 @@
             <source src="{{route('api:upload:get', $file->share_token)}}" type="{{$file->filemime}}" />
         </video>
     @elseif (preg_match('/audio\//', $file->filemime))
-        <style>
-            .plyr {
-                width: 100%;
-                height: 100%;
-            }
-        </style>
+    @section('css')
+    <style>
+      body {
+        background-color: #fff;
+      }
+      #_app {
+        display: flex;
+      }
+      .plyr {
+        width: 100%;
+        box-shadow: 0 0 24px -12px rgba(50,50,50,.6), 0 0 4px 0 rgba(0,0,0,0.12);
+        margin: 20px;
+        height: initial;
+        border-radius: 8px;
+      }
+    </style>
+    @endsection
         <audio class="_plyr">
             <source src="{{route('api:upload:get', $file->share_token)}}" type="{{$file->filemime}}" />
         </audio>
