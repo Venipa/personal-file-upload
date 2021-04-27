@@ -318,7 +318,13 @@ class UploadController extends Controller
             ]);
         }
         $fileUrl = $this->parseFileUrl($driverConfig, $store->url($fileHash));
-        dd($fileUrl);
-        return redirect()->to($fileUrl);
+        
+        return response()->stream(function () use ($stream) {
+          while (ob_get_level() > 0) ob_end_flush();
+          fpassthru($stream);
+      }, 200, [
+          'Content-Type' => 'application/octet-stream',
+          'Content-Disposition' => 'attachment; ' . $file->filename
+      ]);
     }
 }
