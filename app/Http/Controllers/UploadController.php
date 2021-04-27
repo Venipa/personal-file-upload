@@ -300,7 +300,7 @@ class UploadController extends Controller
             }
             if ($file->filesize > config('app.maxPreviewFile')) {
                 $fileUrl = $this->parseFileUrl($driverConfig, $store->url($fileHash));
-                return redirect($fileUrl, 302, [], true); // File to big, 302 to direct url
+                return redirect()->away($fileUrl); // File to big, 302 to direct url
             }
         }
         $stream = $fs->readStream($fileHash);

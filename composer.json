@@ -1,11 +1,11 @@
 {
-    "name": "laravel/laravel",
+    "name": "venipa/personal-file-upload",
     "description": "The Laravel Framework.",
     "keywords": ["framework", "laravel"],
     "license": "MIT",
     "type": "project",
     "require": {
-        "php": "^7.2.0|^8.0.0",
+        "php": "^7.3.0|^8.0.0",
         "buzz/laravel-google-captcha": "^2.1",
         "fideloper/proxy": "^4.0",
         "gghughunishvili/entrust": "^2.0",
