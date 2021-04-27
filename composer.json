@@ -5,19 +5,20 @@
     "license": "MIT",
     "type": "project",
     "require": {
-        "php": "^7.2.0",
+        "php": "^7.2.0|^8.0.0",
         "buzz/laravel-google-captcha": "^2.1",
         "fideloper/proxy": "^4.0",
         "gghughunishvili/entrust": "^2.0",
-        "laravel/framework": "6.0",
+        "laravel/framework": "7.0",
         "laravel/helpers": "^1.1",
-        "laravel/tinker": "^1.0",
+        "laravel/tinker": "^2.0",
         "pbmedia/laravel-ffmpeg": "^5.0",
         "php-http/guzzle6-adapter": "^1.1",
         "probablyrational/wasabi-storage": "^1.1",
         "ralouphie/mimey": "^2.0",
         "spatie/laravel-medialibrary": "^7.5",
         "symfony/translation-contracts": "2.0.1",
+        "facade/ignition": "^2.0",
         "venipa/curl-axel": "^0.9.1a"
     },
     "require-dev": {
@@ -25,8 +26,8 @@
         "filp/whoops": "^2.0",
         "fzaninotto/faker": "^1.4",
         "mockery/mockery": "^1.0",
-        "nunomaduro/collision": "^2.0",
-        "phpunit/phpunit": "^7.0"
+        "nunomaduro/collision": "^4.1",
+        "phpunit/phpunit": "^8.5"
     },
     "autoload": {
         "classmap": [

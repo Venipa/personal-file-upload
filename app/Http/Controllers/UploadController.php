@@ -295,7 +295,7 @@ class UploadController extends Controller
         }
         if ($driverConfig['driver'] !== 'local') {
             if (!preg_match('/^(video|audio|image)/', $file->filemime)) {
-                $fileUrl = $this->parseFileUrl($driverConfig, $store->temporaryUrl($fileHash, now()->addMinutes(5)));
+                $fileUrl = !config('app.temporaryAccessUrl', false) ? $this->parseFileUrl($driverConfig, $store->url($fileHash)) : $this->parseFileUrl($driverConfig, $store->temporaryUrl($fileHash, now()->addMinutes(10)));
                 return redirect()->to($fileUrl);
             }
             if ($file->filesize > config('app.maxPreviewFile')) {
@@ -304,7 +304,11 @@ class UploadController extends Controller
             }
         }
         $stream = $fs->readStream($fileHash);
-        if (!preg_match('/^(video|audio)\/(ogg|mp3|mp4|mpeg|webm)/', $file->filemime)) {
+        if (preg_match('/mpeg$/', $file->filemime) && $file->filemime != "audio/mp3") {
+            $file->filemime = "audio/mp3";
+            $file->save();
+        }
+        if (preg_match('/^((video|audio)\/(ogg|mp3|mp4|mpeg|webm)|(plain|application)\/(text|json)/', $file->filemime)) {
             return response()->stream(function () use ($stream) {
                 while (ob_get_level() > 0) ob_end_flush();
                 fpassthru($stream);
@@ -313,45 +317,7 @@ class UploadController extends Controller
                 'Content-Disposition' => 'inline; ' . $file->filename
             ]);
         }
-        if (preg_match('/mpeg$/', $file->filemime) && $file->filemime != "audio/mp3") {
-            $file->filemime = "audio/mp3";
-            $file->save();
-        }
-        $size = $file->filesize;
-        $start = 0;
-        $length = $size;
-        $status = 200;
-        $type = $file->filemime;
-        $headers = [
-            'Content-Type' => $type, 'Content-Length' => $size, 'Accept-Ranges' => 'bytes',
-            'Content-Disposition' => 'inline; ' . $file->filename
-        ];
-
-        if (false !== $range = $request->server('HTTP_RANGE', false)) {
-            list($param, $range) = explode('=', $range);
-            if (strtolower(trim($param)) !== 'bytes') {
-                header('HTTP/1.1 400 Invalid Request');
-                exit;
-            }
-            list($from, $to) = explode('-', $range);
-            if ($from === '') {
-                $end = $size - 1;
-                $start = $end - intval($from);
-            } elseif ($to === '') {
-                $start = intval($from);
-                $end = $size - 1;
-            } else {
-                $start = intval($from);
-                $end = intval($to);
-            }
-            $length = $end - $start + 1;
-            $status = 206;
-            $headers['Content-Range'] = sprintf('bytes %d-%d/%d', $start, $end, $size);
-        }
-        return response()->stream(function () use ($stream, $start, $length) {
-            fseek($stream, $start, SEEK_SET);
-            echo fread($stream, $length);
-            fclose($stream);
-        }, $status, $headers);
+        $fileUrl = $this->parseFileUrl($driverConfig, $store->url($fileHash));
+        return redirect()->to($fileUrl);
     }
 }
