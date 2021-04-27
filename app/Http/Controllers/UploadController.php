@@ -308,7 +308,7 @@ class UploadController extends Controller
             $file->filemime = "audio/mp3";
             $file->save();
         }
-        if (preg_match('/^((video|audio)\/(ogg|mp3|mp4|mpeg|webm)|(plain|application)\/(text|json))/', $file->filemime)) {
+        if (preg_match('/^((video|audio)\/(ogg|mp3|mp4|mpeg|webm)|(plain|application)\/(text|json))/', $file->filemime) || preg_match('/^(image)/', $file->filemime)) {
             return response()->stream(function () use ($stream) {
                 while (ob_get_level() > 0) ob_end_flush();
                 fpassthru($stream);
