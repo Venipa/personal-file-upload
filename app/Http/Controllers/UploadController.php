@@ -318,6 +318,7 @@ class UploadController extends Controller
             ]);
         }
         $fileUrl = $this->parseFileUrl($driverConfig, $store->url($fileHash));
+        dd($fileUrl);
         return redirect()->to($fileUrl);
     }
 }
