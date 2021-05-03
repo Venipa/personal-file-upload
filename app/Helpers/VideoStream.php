@@ -2,13 +2,20 @@
 
 namespace App\Helpers;
 
+use App\Uploads;
 use Illuminate\Http\Request;
 
 class VideoStream
 {
-  private Request $request;
-  private Uploads $file;
-  function __construct(Uploads $file, Request $request)
+  /**
+   * @var Request
+   */
+  private $request;
+  /**
+   * @var Uploads
+   */
+  private $file;
+  function __construct($file, $request)
   {
     $this->file = $file;
     $this->request = $request;
@@ -25,32 +32,26 @@ class VideoStream
       'Content-Type' => $type, 'Content-Length' => $size, 'Accept-Ranges' => 'bytes',
       'Content-Disposition' => 'inline; ' . $this->file->filename
     ];
+		// Check for request for part of the stream
+		$range = $this->request->header('Range');
+		if($range != null) {
+			$eqPos = strpos($range, "=");
+			$toPos = strpos($range, "-");
+			$unit = substr($range, 0, $eqPos);
+			$start = intval(substr($range, $eqPos+1, $toPos));
+			$success = fseek($stream, $start);
+			if($success == 0) {
+				$size = $length - $start;
+				$status = 206;
+				$headers["Accept-Ranges"] = $unit;
+				$headers["Content-Range"] = $unit . " " . $start . "-" . ($length-1) . "/" . $length;
+			}
+		}
+		
+		$headers["Content-Length"] = $size;
 
-    if (false !== $range = $this->request->server('HTTP_RANGE', false)) {
-      list($param, $range) = explode('=', $range);
-      if (strtolower(trim($param)) !== 'bytes') {
-        header('HTTP/1.1 400 Invalid Request');
-        exit;
-      }
-      list($from, $to) = explode('-', $range);
-      if ($from === '') {
-        $end = $size - 1;
-        $start = $end - intval($from);
-      } elseif ($to === '') {
-        $start = intval($from);
-        $end = $size - 1;
-      } else {
-        $start = intval($from);
-        $end = intval($to);
-      }
-      $length = $end - $start + 1;
-      $status = 206;
-      $headers['Content-Range'] = sprintf('bytes %d-%d/%d', $start, $end, $size);
-    }
-    return response()->stream(function () use ($stream, $start, $length) {
-      fseek($stream, $start, SEEK_SET);
-      echo fread($stream, $length);
-      fclose($stream);
-    }, $status, $headers);
+		return response()->stream(function () use ($stream) {
+			fpassthru($stream);
+		}, $status, $headers);
   }
 }

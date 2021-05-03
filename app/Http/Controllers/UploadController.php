@@ -310,12 +310,7 @@ class UploadController extends Controller
     }
     if (preg_match('/^((video|audio)\/(ogg|mp3|mp4|mpeg|webm)|(plain|application)\/(text|json))/', $file->filemime) || preg_match('/^(image)/', $file->filemime)) {
       $fileStreamHandle = new VideoStream($file, $request);
-      return response()->stream(function () use ($stream, $fileStreamHandle) {
-        $fileStreamHandle->stream($stream);
-      }, 200, [
-        'Content-Type' => $file->filemime,
-        'Content-Disposition' => 'inline; ' . $file->filename
-      ]);
+      return $fileStreamHandle->stream($stream);
     }
     $fileUrl = $this->parseFileUrl($driverConfig, $store->url($fileHash));
 
