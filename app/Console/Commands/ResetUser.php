@@ -42,7 +42,7 @@ class CreateUser extends Command
     {
         $userEmail = $this->ask('Whats the email for reset?');
         $user = null;
-        if (($user = User::where('email', $userEmail)->first()) != null) {
+        if (($user = User::where('email', $userEmail)->first()) == null) {
             return $this->error('User does not exist');
         }
         $pw = str_random(20);
