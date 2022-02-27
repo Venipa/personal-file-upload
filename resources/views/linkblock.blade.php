@@ -37,15 +37,17 @@
     </div>
 @endsection
 @section('js')
-    <script id="tmx">
-        document.addEventListener("DOMContentLoaded", function() {
-            setTimeout(function() {
-                const a = document.createElement("a");
-                a.href = btoa('{{ base64_encode($link->url) }}');
-                a.click();
-                a.remove();
-            }, 2000 + ~~Number('{{ $link->wait * 1000 }}'));
-        })
-        document.getElementById("tmx").remove();
-    </script>
+    @if ($link->wait != null)
+        <script id="tmx">
+            document.addEventListener("DOMContentLoaded", function() {
+                setTimeout(function() {
+                    const a = document.createElement("a");
+                    a.href = btoa('{{ base64_encode($link->url) }}');
+                    a.click();
+                    a.remove();
+                }, 2000 + ~~Number('{{ $link->wait * 1000 }}'));
+            })
+            document.getElementById("tmx").remove();
+        </script>
+    @endif
 @endsection
