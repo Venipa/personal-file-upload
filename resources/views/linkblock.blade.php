@@ -28,21 +28,24 @@
                         </div>
                     </div>
                 @elseif($link->wait != null)
-                <h5 class="text-center mb-3">Waiting... ({{$link->getDuration()}})</h5>
-                    <script>
-                        document.addEventListener("DOMContentLoad", function() {
-                            setTimeout(function() {
-                                const a = document.createElement("a");
-                                a.href = btoa('{{ base64_encode($link->url) }}');
-                                a.click();
-                                a.remove();
-                            }, 2000 + ~~Number('{{ $link->wait * 1000 }}'));
-                        })
-                    </script>
-                    @else
-
+                    <h5 class="text-center mb-3">Waiting... ({{ $link->getDuration() }})</h5>
+                @else
+                    <h5 class="text-center mb-3">Page not found</h5>
                 @endif
             </div>
         </div>
     </div>
+@endsection
+@section('js')
+    <script id="tmx">
+        document.addEventListener("DOMContentLoaded", function() {
+            setTimeout(function() {
+                const a = document.createElement("a");
+                a.href = btoa('{{ base64_encode($link->url) }}');
+                a.click();
+                a.remove();
+            }, 2000 + ~~Number('{{ $link->wait * 1000 }}'));
+        })
+        document.getElementById("tmx").remove();
+    </script>
 @endsection
