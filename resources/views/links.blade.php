@@ -10,7 +10,7 @@
         </div>
         @if(isset($createdLink) && $createdLink != null)
         <div class="row justify-content-center">
-          <div class="col-md-8">
+          <div class="col-md-12">
             <div class="alert alert-success flex-row align-items-center">
               <span>Link has been created.</span>
               <div class="pr-2"></div>
@@ -20,7 +20,7 @@
         </div>
         @endif
         <div class="row justify-content-center">
-            <div class="col-md-8">
+            <div class="col-md-12">
                 @if($user->links->count() == 0)
                     <div class="alert alert-danger">
                         No Links found yet
