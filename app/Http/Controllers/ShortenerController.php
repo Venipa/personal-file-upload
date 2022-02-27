@@ -16,7 +16,7 @@ class ShortenerController extends Controller
             'key' => 'required|exists:users,apikey',
             'url' => 'required|url',
             'password' => 'sometimes|nullable|min:4|max:255',
-            'wait' => 'sometimes|required|nullable|numeric|max:' . 60*5
+            'wait' => 'sometimes|nullable|numeric|max:' . 60*5
         ]);
         if($v->fails()) return $v->errors();
         $user = User::where('apikey', $r->input('key'))->first();
