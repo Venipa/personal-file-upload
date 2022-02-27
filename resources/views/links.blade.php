@@ -8,7 +8,7 @@
                 <h5>Links</h5>
             </div>
         </div>
-        @if($createdLink)
+        @if($createdLink != null)
         <div class="row justify-content-center">
           <div class="col-md-8">
             <div class="alert alert-success flex-row align-items-center">
