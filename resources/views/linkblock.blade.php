@@ -42,7 +42,7 @@
             document.addEventListener("DOMContentLoaded", function() {
                 setTimeout(function() {
                     const a = document.createElement("a");
-                    a.href = btoa('{{ base64_encode($link->url) }}');
+                    a.href = atob('{{ base64_encode($link->url) }}');
                     a.click();
                     a.remove();
                 }, 2000 + ~~Number('{{ $link->wait * 1000 }}'));
