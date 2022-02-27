@@ -74,7 +74,7 @@ class ShortenerController extends Controller
             'wait' => $r->input('wait', null),
             'userId' => $user->id
         ]);
-        return redirect()->route('links')->with("link", $link);
+        return redirect()->route('links')->with("createdLink", $link);
     }
     public function links() {
         $user = Auth::user()->with('links')->first();
