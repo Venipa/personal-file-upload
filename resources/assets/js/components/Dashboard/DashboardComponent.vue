@@ -39,19 +39,24 @@
           </a>
         </div>
         <div class="col-md mb-2">
-          <div class="card">
-            <div class="card-body d-flex justify-content-center" v-if="isLoading">
-              <atom-spinner :animation-duration="1000" :size="60" color="#7289da" />
-            </div>
-            <div class="card-body d-flex justify-content-start align-items-center" v-else>
-              <link-icon style="width: 32px; height: 32px" :size="32" />
-              <div class="flex-fill"></div>
-              <div class="d-flex flex-column justify-content-center align-items-end">
-                <h4 class="my-0">{{ stats && stats.links || 0 }}</h4>
-                <span class="my-0 text-muted text-small">Links</span>
+          <a href="/links" class="text-decoration-none text-default">
+            <div class="card">
+              <div class="card-badge card-badge-xl bg-primary text-white">
+                <link-icon style="width: 22px; height: 22px" :size="22" />
+              </div>
+              <div class="card-body d-flex justify-content-center" v-if="isLoading">
+                <atom-spinner :animation-duration="1000" :size="60" color="#7289da" />
+              </div>
+              <div class="card-body d-flex justify-content-start align-items-center" v-else>
+                <link-icon style="width: 32px; height: 32px" :size="32" />
+                <div class="flex-fill"></div>
+                <div class="d-flex flex-column justify-content-center align-items-end">
+                  <h4 class="my-0">{{ stats && stats.links || 0 }}</h4>
+                  <span class="my-0 text-muted text-small">Links</span>
+                </div>
               </div>
             </div>
-          </div>
+          </a>
         </div>
       </div>
       <div class="row mb-3">
@@ -94,29 +99,12 @@
           <div class="card flex-fill flex-col">
             <div class="card-body flex-column" v-if="user">
               <b-form-group id="apikey-1" label="API Key" label-for="apikey-i1">
-                <b-form-input
-                  id="apikey-i1"
-                  :value="user.apikey"
-                  type="password"
-                  :disabled="true"
-                  trim
-                ></b-form-input>
+                <b-form-input id="apikey-i1" :value="user.apikey" type="password" :disabled="true" trim></b-form-input>
               </b-form-group>
               <div class="d-flex flex-row">
-                <b-button
-                  class="d-flex flex-row mr-2"
-                  variant="primary"
-                  @click.prevent="generateNew"
-                  :disabled="isGenerateLoading"
-                >
+                <b-button class="d-flex flex-row mr-2" variant="primary" @click.prevent="generateNew" :disabled="isGenerateLoading">
                   <span>Reset</span>
-                  <app-spinner
-                    v-if="isGenerateLoading"
-                    class="ml-2"
-                    :size="8"
-                    sizeUnit="px"
-                    color="#ffffff"
-                  />
+                  <app-spinner v-if="isGenerateLoading" class="ml-2" :size="8" sizeUnit="px" color="#ffffff" />
                 </b-button>
                 <b-button variant="dark" @click.prevent="() => copySecret(user.apikey)">Copy</b-button>
               </div>
@@ -154,22 +142,22 @@ const defaultData = () => {
     isGenerateLoading: false,
     log: {
       error: null,
-      success: null
-    }
+      success: null,
+    },
   };
 };
 export default {
   components: {
     "atom-spinner": AtomSpinner,
     "app-spinner": PulseLoader,
-    "app-header": () => import('./HeaderComponent'),
+    "app-header": () => import("./HeaderComponent"),
     DownloadIcon,
     UploadIcon,
     ViewIcon,
     LinkIcon,
     ImageIcon,
     VideoIcon,
-    AudioIcon
+    AudioIcon,
   },
   data() {
     return defaultData();
@@ -177,7 +165,7 @@ export default {
   computed: {
     appName() {
       return window.appName;
-    }
+    },
   },
   methods: {
     setSuccess(str) {
@@ -193,14 +181,14 @@ export default {
       this.$bvToast.toast(`API Key has been copied to clipboard`, {
         title: "API Key",
         autoHideDelay: 5000,
-        appendToast: true
+        appendToast: true,
       });
     },
     generateNew() {
       this.isGenerateLoading = true;
       user
         .generateNew()
-        .then(x => {
+        .then((x) => {
           if (!x.data?.key) {
             this.isGenerateLoading = false;
             return;
@@ -213,18 +201,18 @@ export default {
           this.isGenerateLoading = false;
           this.copySecret(x.data?.key);
         })
-        .catch(err => {
+        .catch((err) => {
           console.error(err);
           this.isGenerateLoading = false;
         });
-    }
+    },
   },
   mounted() {
-    user.currentUser().then(x => {
+    user.currentUser().then((x) => {
       this.user = x.data?.user;
     });
     user.statistics().then(
-      x => {
+      (x) => {
         this.isLoading = false;
         this.stats = x.data.statistics;
       },
@@ -236,7 +224,7 @@ export default {
         }
       }
     );
-  }
+  },
 };
 </script>
 

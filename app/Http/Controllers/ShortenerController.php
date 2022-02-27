@@ -15,7 +15,7 @@ class ShortenerController extends Controller
         $v = Validator::make($r->all(), [
             'key' => 'required|exists:users,apikey',
             'url' => 'required|url',
-            'password' => 'sometimes|required|nullable|min:4|max:255',
+            'password' => 'sometimes|nullable|min:4|max:255',
             'wait' => 'sometimes|required|nullable|numeric|max:' . 60*5
         ]);
         if($v->fails()) return $v->errors();
@@ -74,7 +74,7 @@ class ShortenerController extends Controller
             'wait' => $r->input('wait', null),
             'userId' => $user->id
         ]);
-        return redirect()->route('links');
+        return redirect()->route('links')->with("link", $link);
     }
     public function links() {
         $user = Auth::user()->with('links')->first();

@@ -15,7 +15,7 @@
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <label for="#link">Link</label>
-                                        <input type="url" name="link" class="form-control" required autofocus id="link">
+                                        <input type="url" name="link" class="form-control" required autofocus autocomplete="url" id="link">
 
                                         @if($errors->has('link'))
                                             @foreach($errors as $error)
@@ -26,10 +26,10 @@
                                 </div>
                             </div>
                             <div class="row justify-content-center">
-                                <div class="col-md-8">
+                                <div class="col-md-12">
                                     <div class="form-group">
                                         <label for="#password">Password</label>
-                                        <input type="password" name="password" class="form-control" autofocus id="password">
+                                        <input type="password" name="password" class="form-control" autocomplete="off" id="password">
                                         <small class="text-muted">Leave empty to disable Password</small>
                                         @if($errors->has('password'))
                                             @foreach($errors as $error)
@@ -38,18 +38,20 @@
                                         @endif
                                     </div>
                                 </div>
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                        <label for="#wait">Wait</label>
-                                        <input type="number" name="wait" min="0" max="{{60*5}}" class="form-control" autofocus id="wait">
-                                        <small class="text-muted">Leave empty to disable Wait Time</small>
-                                        @if($errors->has('wait'))
-                                            @foreach($errors as $error)
-                                                <small class="text-danger">{{$error}}</small>
-                                                @endforeach
-                                            @endif
-                                    </div>
-                                </div>
+                            </div>
+                            <div class="row justify-content-center">
+                              <div class="col-md-12">
+                                  <div class="form-group">
+                                      <label for="#wait">Wait</label>
+                                      <input type="number" name="wait" min="0" max="{{60*5}}" class="form-control" autocomplete="off" id="wait">
+                                      <small class="text-muted">Leave empty to disable Wait Time</small>
+                                      @if($errors->has('wait'))
+                                          @foreach($errors as $error)
+                                              <small class="text-danger">{{$error}}</small>
+                                              @endforeach
+                                          @endif
+                                  </div>
+                              </div>
                             </div>
                             <div class="row">
                                 <div class="col-md-12">

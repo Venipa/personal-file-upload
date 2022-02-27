@@ -8,6 +8,17 @@
                 <h5>Links</h5>
             </div>
         </div>
+        @if($createdLink)
+        <div class="row justify-content-center">
+          <div class="col-md-8">
+            <div class="alert alert-success flex-row align-items-center">
+              <span>Link has been created.</span>
+              <div class="pr-2"></div>
+              <a href="{{route("api:link:get", $createdLink->token)}}">{{route("api:link:get", $createdLink->token)}}</a>
+            </div>
+          </div>
+        </div>
+        @endif
         <div class="row justify-content-center">
             <div class="col-md-8">
                 @if($user->links->count() == 0)
@@ -26,29 +37,16 @@
                                             <div class="ripple p-3" id="files-{{$i}}-heading" data-toggle="collapse"
                                                  data-target="#files-{{$i}}" aria-expanded="false"
                                                  aria-controls="files-{{$i}}">{{$link->getUrlName()}}</div>
-                                            <div class="dropdown card-controls">
-                                                <button data-ignore-parent="#files-{{$i}}-heading"
-                                                        class="btn bmd-btn-icon dropdown-toggle" type="button" id="ex1"
-                                                        data-toggle="dropdown" aria-haspopup="true"
-                                                        aria-expanded="false">
-                                                    <i class="mdi mdi-dots-vertical"></i>
-                                                </button>
-                                                <div class="dropdown-menu dropdown-menu-left" aria-labelledby="ex1">
-                                                    <a data-ignore-parent="#files-{{$i}}-heading" class="dropdown-item"
-                                                       href="{{route('api:link:get', $link->token)}}" target="_blank">Open</a>
-                                                </div>
-                                            </div>
                                         </div>
                                     </div>
                                 </div>
 
-                                <div id="files-{{$i}}" class="collapse" aria-labelledby="files-{{$i}}-heading"
-                                     data-parent="#accordion">
+                                <div id="files-{{$i}}" aria-labelledby="files-{{$i}}-heading">
                                     <div class="card-body">
                                         <table class="table table-borderless table-sm">
                                             <thead style="visibility: hidden;">
                                             <tr>
-                                                <th style="width: 100px; "></th>
+                                                <th style="width: 160px; "></th>
                                                 <th></th>
                                             </tr>
                                             </thead>
